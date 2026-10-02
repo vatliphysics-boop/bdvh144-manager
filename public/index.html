@@ -136,6 +136,14 @@
             >
           </div>
 
+          <!-- Địa điểm học -->
+          <div class="form-group" style="margin-top: 1rem;">
+            <div style="font-size: 0.9rem; font-weight: 600; color: #1F2937; margin-bottom: 0.25rem;">Địa điểm học</div>
+            <a href="https://maps.app.goo.gl/RsTMMvJtbgwDP5fQ7" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--primary-600); text-decoration: none; font-size: 0.9rem; background: #F8FAFC; padding: 0.5rem 0.75rem; border: 1px solid #E2E8F0; border-radius: var(--radius-sm);">
+              📍 Mở bản đồ Google Maps
+            </a>
+          </div>
+
           <!-- Confirmation info before submitting -->
           <div class="info-notice-box" id="reg-pre-submit-info">
             📌 Bạn đang đăng ký: <strong>Lớp 10</strong> &bull; Giờ học: <strong>07:30–09:30 thứ Bảy</strong>.
@@ -162,13 +170,46 @@
 
     <!-- VIEW 2: REGISTRATION SUCCESS SCREEN -->
     <section id="view-success" class="tab-view" style="display: none;">
-      <div class="success-screen">
-        <div class="success-icon-wrapper">✓</div>
-        <h2 class="success-title">Ghi danh thành công</h2>
-        <p class="success-subtitle">Hệ thống đã lưu thông tin ghi danh của bạn.</p>
+      <div class="success-screen" style="text-align: center; background: #ffffff; padding: 2.5rem 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); max-width: 480px; margin: 0 auto; border: 1px solid #E2E8F0;">
+        
+        <!-- Vòng tròn và Dấu tích -->
+        <div class="success-anim-container">
+          <svg width="88" height="88" viewBox="0 0 90 90" fill="none">
+            <circle cx="45" cy="45" r="42" class="success-circle" />
+            <path d="M28 45 L40 57 L62 33" class="success-check" />
+          </svg>
+        </div>
+        
+        <h2 class="success-title" style="color: #1F2937; margin-bottom: 1.5rem; font-size: 1.5rem; font-weight: 700;">Ghi danh thành công</h2>
+        
+        <div style="text-align: left; background: #F8FAFC; padding: 1.25rem; border-radius: 8px; border: 1px solid #E2E8F0; margin-bottom: 1.5rem;">
+          <div style="margin-bottom: 0.75rem;">
+            <span style="color: #4B5563; font-size: 0.9rem;">Học sinh:</span>
+            <strong style="color: #1F2937; display: block; font-size: 1.15rem; margin-top: 0.2rem;" id="succ-student-name">—</strong>
+          </div>
+          <hr style="border: 0; border-top: 1px solid #E2E8F0; margin: 1rem 0;">
+          <div style="display: grid; grid-template-columns: 1fr; gap: 0.75rem;">
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #4B5563; font-size: 0.9rem;">Lớp:</span>
+              <strong style="color: #1F2937; font-size: 0.95rem;" id="succ-class-name">—</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #4B5563; font-size: 0.9rem;">Ngày học:</span>
+              <strong style="color: #1F2937; font-size: 0.95rem;" id="succ-session-date">—</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #4B5563; font-size: 0.9rem;">Giờ học:</span>
+              <strong style="color: #1F2937; font-size: 0.95rem;" id="succ-class-time">—</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: #4B5563; font-size: 0.9rem;">Phòng học:</span>
+              <strong style="color: #1F2937; font-size: 0.95rem;" id="succ-room-name">—</strong>
+            </div>
+          </div>
+        </div>
 
         <!-- Banners for Attendance and Test -->
-        <div id="student-banners-container" style="margin-bottom: 1.5rem;">
+        <div id="student-banners-container">
           <!-- Self Attendance Banner -->
           <div class="self-attend-banner" id="self-attend-banner" style="display: none;">
             <div>
@@ -190,43 +231,6 @@
               Bắt đầu làm bài
             </button>
           </div>
-        </div>
-
-        <div class="confirmation-card">
-          <div class="confirm-row">
-            <span class="confirm-label">Họ và tên học sinh:</span>
-            <span class="confirm-value highlight" id="succ-student-name">—</span>
-          </div>
-          <div class="confirm-row">
-            <span class="confirm-label">Lớp đã đăng ký:</span>
-            <span class="confirm-value" id="succ-class-name">—</span>
-          </div>
-          <div class="confirm-row">
-            <span class="confirm-label">Ngày học:</span>
-            <span class="confirm-value" id="succ-session-date">—</span>
-          </div>
-          <div class="confirm-row">
-            <span class="confirm-label">Giờ học chính xác:</span>
-            <span class="confirm-value" id="succ-class-time">—</span>
-          </div>
-          <div class="confirm-row">
-            <span class="confirm-label">Trung tâm:</span>
-            <span class="confirm-value">Trung tâm BDVH 144</span>
-          </div>
-          <div class="confirm-row">
-            <span class="confirm-label">Giáo viên:</span>
-            <span class="confirm-value">thầy Nguyễn Khoa</span>
-          </div>
-          <div class="confirm-row">
-            <span class="confirm-label">Trợ giảng:</span>
-            <span class="confirm-value">Võ Đoàn Đăng Khôi</span>
-          </div>
-        </div>
-
-        <div class="success-actions">
-          <a href="https://maps.app.goo.gl/RsTMMvJtbgwDP5fQ7" target="_blank" rel="noopener noreferrer" class="btn-maps" id="btn-open-google-maps">
-            <span>📍</span> Chỉ đường đến trung tâm
-          </a>
         </div>
       </div>
     </section>
@@ -290,8 +294,7 @@
   <footer class="site-footer" style="position: relative; overflow: hidden; padding-right: 60px;">
     <p><strong>Trung tâm BDVH 144</strong> &bull; Giáo viên: thầy Nguyễn Khoa &bull; Trợ giảng: Võ Đoàn Đăng Khôi</p>
     <p style="margin-top: 0.25rem; font-size: 0.8rem; color: var(--text-muted);">
-      Lớp 10: thứ Bảy 07:30–09:30 &bull; Lớp 11: thứ Bảy 17:30–19:00 &bull; 
-      <a href="https://maps.app.goo.gl/RsTMMvJtbgwDP5fQ7" target="_blank" rel="noopener noreferrer">Mở Google Maps</a>
+      Lớp 10: thứ Bảy 07:30–09:30 &bull; Lớp 11: thứ Bảy 17:30–19:00
     </p>
     <img src="/assets/hoi-vat-ly-viet-nam.png" alt="Logo Hội Vật lý Việt Nam" class="footer-logo">
   </footer>

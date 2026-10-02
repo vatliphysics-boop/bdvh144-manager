@@ -85,7 +85,7 @@ async function loadTeacherReport() {
         <tr>
           <td><strong>${t.formattedTeachingDate}</strong></td>
           <td><span style="font-weight: 700; color: #1e3a8a;">${t.className}</span></td>
-          <td style="color: #475569;">${t.scheduledTime}</td>
+          <td style="color: #475569;">${t.scheduledTime} &bull; ${t.className === 'Lớp 11' ? 'Phòng 4' : 'Phòng 1'}</td>
           <td>${t.checkInTime}</td>
           <td>${t.checkOutTime}</td>
           <td>

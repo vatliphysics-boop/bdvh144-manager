@@ -314,7 +314,7 @@ async function loadTimesheetHistory() {
         <tr>
           <td><strong>${t.formattedTeachingDate}</strong></td>
           <td>${t.class_name}</td>
-          <td>${t.scheduled_time}</td>
+          <td>${t.scheduled_time} &bull; ${t.class_name === 'Lớp 11' ? 'Phòng 4' : 'Phòng 1'}</td>
           <td>${t.check_in_time}</td>
           <td>${t.check_out_time || '—'}</td>
           <td><strong>${isDone ? (t.duration_formatted || '0 phút') : 'Đang tính...'}</strong></td>

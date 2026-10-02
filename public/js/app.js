@@ -207,14 +207,25 @@ async function handleRegistrationSubmit(event) {
 
     // Success confirmed by backend
     appState.registeredClass = data.registration.className;
+    
+    // Determine room
+    let room = 'Phòng 1';
+    if (data.registration.className === 'Lớp 11') {
+      room = 'Phòng 4';
+    }
 
     // Populate success screen
     document.getElementById('succ-student-name').textContent = data.registration.fullName;
     document.getElementById('succ-class-name').textContent = data.registration.className;
-    document.getElementById('succ-session-date').textContent = data.registration.formattedDate + ' (thứ Bảy)';
+    
+    // Format date properly (e.g. thứ Bảy, 03/10/2026)
+    const dateStr = data.registration.formattedDate;
+    document.getElementById('succ-session-date').textContent = dateStr.includes('thứ') ? dateStr : `thứ Bảy, ${dateStr}`;
+    
     document.getElementById('succ-class-time').textContent = data.registration.timeSlot;
+    document.getElementById('succ-room-name').textContent = room;
 
-    // Show success view
+    // Show success view (this will trigger the CSS animation)
     document.getElementById('view-register').style.display = 'none';
     document.getElementById('view-success').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
