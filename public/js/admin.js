@@ -478,7 +478,10 @@ function filterAdminClass(filter) {
           ${r.attendance_updated_by === 'self' ? '👤 Học sinh tự điểm danh' : r.attendance_updated_by === 'admin' ? '🛡️ Quản trị viên' : '—'}
         </td>
         <td>
-          <button class="btn-warning" style="padding: 0.2rem 0.5rem; font-size: 0.75rem; background: #9f1239; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="openKickModal(${r.id}, '${escapeHtml(r.full_name).replace(/'/g, "\\'")}', '${r.class_name}')">Mời ra khỏi lớp</button>
+          <div style="display: flex; gap: 0.25rem;">
+            <button class="btn-warning" style="padding: 0.2rem 0.5rem; font-size: 0.75rem; background: #9f1239; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="openKickModal(${r.id}, '${escapeHtml(r.full_name).replace(/'/g, "\\'")}', '${r.class_name}')">Mời ra</button>
+            <button class="btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.75rem; color: #dc2626; border-color: #fca5a5;" onclick="openDeleteModal(${r.id}, '${escapeHtml(r.full_name).replace(/'/g, "\\'")}', '${r.class_name}')">Xóa</button>
+          </div>
         </td>
       </tr>
     `).join('');
@@ -501,7 +504,10 @@ function filterAdminClass(filter) {
           <span style="font-size: 0.75rem">${r.kicked_at || ''}</span>
         </td>
         <td>
-          <button class="btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="handleRestore(${r.id})">Khôi phục vào lớp</button>
+          <div style="display: flex; gap: 0.25rem;">
+            <button class="btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="handleRestore(${r.id})">Khôi phục</button>
+            <button class="btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.75rem; color: #dc2626; border-color: #fca5a5;" onclick="openDeleteModal(${r.id}, '${escapeHtml(r.full_name).replace(/'/g, "\\'")}', '${r.class_name}')">Xóa</button>
+          </div>
         </td>
       </tr>
     `).join('');
@@ -997,3 +1003,53 @@ async function handleRestore(regId) {
     showToast('Lỗi kết nối máy chủ', 'error');
   }
 }
+
+// ==========================================
+// DELETE STUDENT REGISTRATION
+// ==========================================
+
+let currentDeleteId = null;
+
+function openDeleteModal(regId, studentName, className) {
+  currentDeleteId = regId;
+  document.getElementById('delete-student-name').textContent = studentName;
+  document.getElementById('delete-student-class').textContent = className;
+  document.getElementById('delete-student-date').textContent = adminState.sessionDetails.session.formattedDate;
+  document.getElementById('delete-modal').classList.add('active');
+}
+
+function closeDeleteModal() {
+  currentDeleteId = null;
+  document.getElementById('delete-modal').classList.remove('active');
+}
+
+async function submitDelete() {
+  if (!currentDeleteId) return;
+  
+  const btn = document.getElementById('btn-confirm-delete');
+  btn.disabled = true;
+  btn.textContent = 'Đang xóa...';
+  
+  try {
+    const res = await fetch(`/api/admin/registrations/${currentDeleteId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await res.json();
+    
+    if (!res.ok || !data.success) {
+      showToast(data.message || 'Lỗi khi xóa ghi danh', 'error');
+    } else {
+      showToast(data.message, 'success');
+      closeDeleteModal();
+      loadSessionDetails();
+    }
+  } catch (err) {
+    console.error('Lỗi delete:', err);
+    showToast('Lỗi kết nối máy chủ', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Xác nhận xóa';
+  }
+}
+

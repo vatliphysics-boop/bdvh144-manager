@@ -582,4 +582,30 @@ router.post('/registrations/:id/restore', async (req, res) => {
   }
 });
 
+// DELETE /api/admin/registrations/:id - Xóa vĩnh viễn ghi danh
+router.delete('/registrations/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const regRes = await query('SELECT * FROM registrations WHERE id = $1', [id]);
+    const reg = regRes.rows[0];
+    if (!reg) {
+      return res.status(404).json({ success: false, message: 'Không tìm thấy hồ sơ ghi danh này.' });
+    }
+
+    // Xóa trong 1 transaction
+    await query('BEGIN');
+    await query('DELETE FROM student_attendance WHERE registration_id = $1', [id]);
+    await query('DELETE FROM test_submissions WHERE registration_id = $1', [id]);
+    await query('DELETE FROM registrations WHERE id = $1', [id]);
+    await query('COMMIT');
+
+    res.json({ success: true, message: 'Đã xóa vĩnh viễn hồ sơ ghi danh.' });
+  } catch (err) {
+    await query('ROLLBACK');
+    console.error('Lỗi xóa ghi danh:', err);
+    res.status(500).json({ success: false, message: 'Lỗi máy chủ nội bộ' });
+  }
+});
+
 module.exports = router;

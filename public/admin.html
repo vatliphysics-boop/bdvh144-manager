@@ -441,6 +441,28 @@
     </div>
   </div>
 
+  <!-- DELETE CONFIRMATION MODAL -->
+  <div class="modal-overlay" id="delete-modal">
+    <div class="modal-content" style="max-width: 400px;">
+      <button class="modal-close-btn" onclick="closeDeleteModal()">&times;</button>
+      <div class="modal-header">
+        <h3 style="color: #dc2626;">Xác nhận xóa ghi danh</h3>
+        <p>Học sinh: <strong id="delete-student-name"></strong></p>
+        <p>Lớp: <strong id="delete-student-class"></strong></p>
+        <p>Ngày học: <strong id="delete-student-date"></strong></p>
+      </div>
+
+      <div style="margin-top: 1rem; padding: 0.75rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; font-size: 0.9rem; color: #991b1b;">
+        <strong>Cảnh báo:</strong> Bản ghi danh này sẽ bị xóa vĩnh viễn khỏi hệ thống. Các dữ liệu liên quan bao gồm lịch sử điểm danh và bài test của học sinh trong buổi học này cũng sẽ bị xóa theo. Hành động này không thể hoàn tác!
+      </div>
+
+      <div style="display: flex; gap: 0.5rem; margin-top: 1.25rem;">
+        <button type="button" class="btn-outline" style="flex: 1;" onclick="closeDeleteModal()">Hủy</button>
+        <button type="button" id="btn-confirm-delete" class="submit-btn" style="flex: 1; background: #dc2626; border-color: #dc2626;" onclick="submitDelete()">Xác nhận xóa</button>
+      </div>
+    </div>
+  </div>
+
   <script src="/js/admin.js"></script>
 </body>
 </html>
