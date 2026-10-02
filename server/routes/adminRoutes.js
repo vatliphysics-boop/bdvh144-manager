@@ -541,4 +541,45 @@ router.post('/test/:testId/toggle', async (req, res) => {
   }
 });
 
+// POST /api/admin/registrations/:id/kick - Mời ra khỏi lớp
+router.post('/registrations/:id/kick', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+    const now = getNowVN();
+    
+    // requireAdmin middleware already ensures this is Khôi
+    const adminName = 'Võ Đoàn Đăng Khôi';
+    
+    await query(`
+      UPDATE registrations 
+      SET is_kicked = 1, kicked_reason = $1, kicked_at = $2, kicked_by = $3
+      WHERE id = $4
+    `, [reason || '', now.formattedTime, adminName, id]);
+    
+    res.json({ success: true, message: 'Đã mời học sinh ra khỏi lớp.' });
+  } catch (err) {
+    console.error('Lỗi mời ra khỏi lớp:', err);
+    res.status(500).json({ success: false, message: 'Lỗi máy chủ nội bộ' });
+  }
+});
+
+// POST /api/admin/registrations/:id/restore - Khôi phục vào lớp
+router.post('/registrations/:id/restore', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    await query(`
+      UPDATE registrations 
+      SET is_kicked = 0, kicked_reason = NULL, kicked_at = NULL, kicked_by = NULL
+      WHERE id = $1
+    `, [id]);
+    
+    res.json({ success: true, message: 'Đã khôi phục học sinh vào lớp.' });
+  } catch (err) {
+    console.error('Lỗi khôi phục:', err);
+    res.status(500).json({ success: false, message: 'Lỗi máy chủ nội bộ' });
+  }
+});
+
 module.exports = router;

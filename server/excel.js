@@ -107,7 +107,7 @@ async function generateSessionExcelWorkbook(sessionId) {
     const studentsRes = await query(`
       SELECT * FROM registrations
       WHERE session_id = $1 AND class_name = $2
-      ORDER BY id ASC
+      ORDER BY is_kicked ASC, id ASC
     `, [sessionId, className]);
 
     const students = studentsRes.rows;
@@ -120,7 +120,7 @@ async function generateSessionExcelWorkbook(sessionId) {
 
       row.values = [
         idx + 1,
-        s.full_name,
+        s.is_kicked === 1 ? `${s.full_name} (Đã mời ra)` : s.full_name,
         s.school_name || '—',
         s.class_name,
         s.registered_at
@@ -129,7 +129,11 @@ async function generateSessionExcelWorkbook(sessionId) {
 
       for (let c = 1; c <= 5; c++) {
         const cell = row.getCell(c);
-        cell.font = { name: 'Arial', size: 10, color: { argb: 'FF1F2937' } };
+        if (s.is_kicked === 1) {
+          cell.font = { name: 'Arial', size: 10, color: { argb: 'FF9F1239' }, strike: true };
+        } else {
+          cell.font = { name: 'Arial', size: 10, color: { argb: 'FF1F2937' } };
+        }
         cell.fill = {
           type: 'pattern',
           pattern: 'solid',

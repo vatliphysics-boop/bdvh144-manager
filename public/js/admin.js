@@ -404,9 +404,11 @@ function renderStudentAttendanceSection() {
   btn11.textContent = s.selfAttendanceLop11 ? '✓ Đang MỞ tự điểm danh' : 'Đang ĐÓNG (Bấm để Mở)';
 
   // Counters
-  document.getElementById('count-all-students').textContent = regs.length;
-  document.getElementById('count-lop10-students').textContent = regs.filter(r => r.class_name === 'Lớp 10').length;
-  document.getElementById('count-lop11-students').textContent = regs.filter(r => r.class_name === 'Lớp 11').length;
+  // Counters
+  const activeRegs = regs.filter(r => r.is_kicked !== 1);
+  document.getElementById('count-all-students').textContent = activeRegs.length;
+  document.getElementById('count-lop10-students').textContent = activeRegs.filter(r => r.class_name === 'Lớp 10').length;
+  document.getElementById('count-lop11-students').textContent = activeRegs.filter(r => r.class_name === 'Lớp 11').length;
 
   filterAdminClass(adminState.activeClassFilter);
 }
@@ -450,32 +452,60 @@ function filterAdminClass(filter) {
   const regs = adminState.sessionDetails.registrations;
   const filtered = filter === 'ALL' ? regs : regs.filter(r => r.class_name === filter);
 
+  const activeStudents = filtered.filter(r => r.is_kicked !== 1);
+  const kickedStudents = filtered.filter(r => r.is_kicked === 1);
+
   const tbody = document.getElementById('student-attendance-tbody');
-  if (filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Chưa có học sinh nào trong danh sách.</td></tr>`;
-    return;
+  if (activeStudents.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" class="empty-state">Chưa có học sinh nào trong danh sách.</td></tr>`;
+  } else {
+    tbody.innerHTML = activeStudents.map((r, idx) => `
+      <tr>
+        <td style="text-align: center; font-weight: 700; color: #64748b;">${idx + 1}</td>
+        <td><strong>${escapeHtml(r.full_name)}</strong></td>
+        <td><span style="font-weight: 700; color: #1e3a8a;">${r.class_name}</span></td>
+        <td style="color: #475569;">${escapeHtml(r.school_name || '—')}</td>
+        <td style="font-size: 0.85rem; color: #64748b;">${r.registered_at}</td>
+        <td>
+          <select class="select-status" data-status="${r.attendance_status}" onchange="updateStudentAttendance(${r.id}, this.value)">
+            <option value="Chưa điểm danh" ${r.attendance_status === 'Chưa điểm danh' ? 'selected' : ''}>Chưa điểm danh</option>
+            <option value="Có mặt" ${r.attendance_status === 'Có mặt' ? 'selected' : ''}>Có mặt</option>
+            <option value="Đi muộn" ${r.attendance_status === 'Đi muộn' ? 'selected' : ''}>Đi muộn</option>
+            <option value="Vắng" ${r.attendance_status === 'Vắng' ? 'selected' : ''}>Vắng</option>
+          </select>
+        </td>
+        <td style="font-size: 0.82rem; color: #64748b;">
+          ${r.attendance_updated_by === 'self' ? '👤 Học sinh tự điểm danh' : r.attendance_updated_by === 'admin' ? '🛡️ Quản trị viên' : '—'}
+        </td>
+        <td>
+          <button class="btn-warning" style="padding: 0.2rem 0.5rem; font-size: 0.75rem; background: #9f1239; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="openKickModal(${r.id}, '${escapeHtml(r.full_name).replace(/'/g, "\\'")}', '${r.class_name}')">Mời ra khỏi lớp</button>
+        </td>
+      </tr>
+    `).join('');
   }
 
-  tbody.innerHTML = filtered.map((r, idx) => `
-    <tr>
-      <td style="text-align: center; font-weight: 700; color: #64748b;">${idx + 1}</td>
-      <td><strong>${escapeHtml(r.full_name)}</strong></td>
-      <td><span style="font-weight: 700; color: #1e3a8a;">${r.class_name}</span></td>
-      <td style="color: #475569;">${escapeHtml(r.school_name || '—')}</td>
-      <td style="font-size: 0.85rem; color: #64748b;">${r.registered_at}</td>
-      <td>
-        <select class="select-status" data-status="${r.attendance_status}" onchange="updateStudentAttendance(${r.id}, this.value)">
-          <option value="Chưa điểm danh" ${r.attendance_status === 'Chưa điểm danh' ? 'selected' : ''}>Chưa điểm danh</option>
-          <option value="Có mặt" ${r.attendance_status === 'Có mặt' ? 'selected' : ''}>Có mặt</option>
-          <option value="Đi muộn" ${r.attendance_status === 'Đi muộn' ? 'selected' : ''}>Đi muộn</option>
-          <option value="Vắng" ${r.attendance_status === 'Vắng' ? 'selected' : ''}>Vắng</option>
-        </select>
-      </td>
-      <td style="font-size: 0.82rem; color: #64748b;">
-        ${r.attendance_updated_by === 'self' ? '👤 Học sinh tự điểm danh' : r.attendance_updated_by === 'admin' ? '🛡️ Quản trị viên' : '—'}
-      </td>
-    </tr>
-  `).join('');
+  const kickedTbody = document.getElementById('kicked-students-tbody');
+  document.getElementById('count-kicked-students').textContent = kickedStudents.length;
+  
+  if (kickedStudents.length === 0) {
+    kickedTbody.innerHTML = `<tr><td colspan="6" class="empty-state" style="background: transparent;">Không có học sinh nào bị mời ra.</td></tr>`;
+  } else {
+    kickedTbody.innerHTML = kickedStudents.map((r, idx) => `
+      <tr>
+        <td style="text-align: center; font-weight: 700; color: #9f1239;">${idx + 1}</td>
+        <td><strong>${escapeHtml(r.full_name)}</strong></td>
+        <td><span style="font-weight: 700; color: #1e3a8a;">${r.class_name}</span></td>
+        <td style="color: #9f1239;">${escapeHtml(r.kicked_reason || 'Không có lý do')}</td>
+        <td style="font-size: 0.85rem; color: #64748b;">
+          ${escapeHtml(r.kicked_by || 'Quản trị viên')}<br>
+          <span style="font-size: 0.75rem">${r.kicked_at || ''}</span>
+        </td>
+        <td>
+          <button class="btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="handleRestore(${r.id})">Khôi phục vào lớp</button>
+        </td>
+      </tr>
+    `).join('');
+  }
 }
 
 // Update student attendance
@@ -891,4 +921,79 @@ async function viewHistoryDetails(sessionId, className) {
 
 function closeHistoryDetailsModal() {
   document.getElementById('history-details-modal').classList.remove('open');
+}
+
+// ==========================================
+// KICK & RESTORE STUDENTS
+// ==========================================
+
+let currentKickId = null;
+
+function openKickModal(regId, studentName, className) {
+  currentKickId = regId;
+  document.getElementById('kick-student-name').textContent = studentName;
+  document.getElementById('kick-student-class').textContent = className;
+  document.getElementById('kick-student-date').textContent = adminState.sessionDetails.session.formattedDate;
+  document.getElementById('kick-reason').value = '';
+  document.getElementById('kick-modal').classList.add('active');
+}
+
+function closeKickModal() {
+  currentKickId = null;
+  document.getElementById('kick-modal').classList.remove('active');
+}
+
+async function submitKick(e) {
+  e.preventDefault();
+  if (!currentKickId) return;
+  
+  const reason = document.getElementById('kick-reason').value.trim();
+  const btn = document.querySelector('#kick-form .submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Đang xử lý...';
+  
+  try {
+    const res = await fetch(`/api/admin/registrations/${currentKickId}/kick`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason })
+    });
+    const data = await res.json();
+    
+    if (!res.ok || !data.success) {
+      showToast(data.message || 'Lỗi khi mời ra khỏi lớp', 'error');
+    } else {
+      showToast(data.message, 'success');
+      closeKickModal();
+      loadSessionDetails();
+    }
+  } catch (err) {
+    console.error('Lỗi kick:', err);
+    showToast('Lỗi kết nối máy chủ', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Xác nhận mời ra';
+  }
+}
+
+async function handleRestore(regId) {
+  if (!confirm('Bạn có chắc chắn muốn khôi phục học sinh này vào lớp? Hồ sơ cũ sẽ được sử dụng lại.')) return;
+  
+  try {
+    const res = await fetch(`/api/admin/registrations/${regId}/restore`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await res.json();
+    
+    if (!res.ok || !data.success) {
+      showToast(data.message || 'Lỗi khi khôi phục', 'error');
+    } else {
+      showToast(data.message, 'success');
+      loadSessionDetails();
+    }
+  } catch (err) {
+    console.error('Lỗi restore:', err);
+    showToast('Lỗi kết nối máy chủ', 'error');
+  }
 }

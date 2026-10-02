@@ -285,6 +285,13 @@ router.post('/self-attend', async (req, res) => {
       });
     }
 
+    if (reg.is_kicked === 1) {
+      return res.status(403).json({
+        success: false,
+        message: 'Bạn đã bị mời ra khỏi lớp, không thể điểm danh.'
+      });
+    }
+
     const nowVN = getNowVN();
     await query(`
       UPDATE student_attendance
@@ -363,6 +370,9 @@ router.get('/test', async (req, res) => {
 
       const reg = regRes.rows[0];
       if (reg) {
+        if (reg.is_kicked === 1) {
+          return res.status(403).json({ success: false, message: 'Bạn đã bị mời ra khỏi lớp.' });
+        }
         const subRes = await query('SELECT * FROM test_submissions WHERE test_id = $1 AND registration_id = $2', [test.id, reg.id]);
         const sub = subRes.rows[0];
         if (sub) {
@@ -423,6 +433,10 @@ router.post('/test-submit', async (req, res) => {
     const reg = regRes.rows[0];
     if (!reg) {
       return res.status(403).json({ success: false, message: 'Bạn chưa ghi danh vào lớp này.' });
+    }
+
+    if (reg.is_kicked === 1) {
+      return res.status(403).json({ success: false, message: 'Bạn đã bị mời ra khỏi lớp, không thể nộp bài test.' });
     }
 
     // Anti-duplicate submission check

@@ -99,16 +99,24 @@ async function loadCurrentSession() {
     if (data.myRegistration) {
       appState.registeredClass = data.myRegistration.class_name || data.myRegistration.className;
       
-      const classInfo = data.classes[appState.registeredClass];
-      document.getElementById('succ-student-name').textContent = data.myRegistration.full_name || data.myRegistration.fullName || '—';
-      document.getElementById('succ-class-name').textContent = appState.registeredClass;
-      document.getElementById('succ-session-date').textContent = data.session.formattedDate + ' (thứ Bảy)';
-      document.getElementById('succ-class-time').textContent = classInfo ? classInfo.timeSlot : '—';
-      
-      document.getElementById('view-register').style.display = 'none';
-      document.getElementById('view-success').style.display = 'block';
+      if (data.myRegistration.is_kicked === 1) {
+        document.getElementById('view-register').style.display = 'none';
+        document.getElementById('view-success').style.display = 'none';
+        document.getElementById('view-kicked').style.display = 'block';
+        document.getElementById('kicked-reason-display').textContent = data.myRegistration.kicked_reason || 'Không có lý do';
+      } else {
+        const classInfo = data.classes[appState.registeredClass];
+        document.getElementById('succ-student-name').textContent = data.myRegistration.full_name || data.myRegistration.fullName || '—';
+        document.getElementById('succ-class-name').textContent = appState.registeredClass;
+        document.getElementById('succ-session-date').textContent = data.session.formattedDate + ' (thứ Bảy)';
+        document.getElementById('succ-class-time').textContent = classInfo ? classInfo.timeSlot : '—';
+        
+        document.getElementById('view-register').style.display = 'none';
+        document.getElementById('view-success').style.display = 'block';
+        document.getElementById('view-kicked').style.display = 'none';
 
-      updateBanners(data.session, data.myRegistration.attendance_status);
+        updateBanners(data.session, data.myRegistration.attendance_status);
+      }
     }
 
   } catch (err) {

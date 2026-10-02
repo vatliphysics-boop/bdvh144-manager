@@ -108,7 +108,11 @@ async function initDatabase() {
       school_name VARCHAR(255),
       idempotency_key VARCHAR(100) UNIQUE,
       student_token VARCHAR(100) NOT NULL,
-      registered_at VARCHAR(50) NOT NULL
+      registered_at VARCHAR(50) NOT NULL,
+      is_kicked INTEGER DEFAULT 0,
+      kicked_reason VARCHAR(255),
+      kicked_at VARCHAR(50),
+      kicked_by VARCHAR(100)
     )`,
     `CREATE TABLE IF NOT EXISTS student_attendance (
       id SERIAL PRIMARY KEY,
@@ -199,6 +203,15 @@ async function initDatabase() {
 
   for (const stmt of schemaStatements) {
     await query(stmt);
+  }
+
+  try {
+    await query(`ALTER TABLE registrations ADD COLUMN is_kicked INTEGER DEFAULT 0`);
+    await query(`ALTER TABLE registrations ADD COLUMN kicked_reason VARCHAR(255)`);
+    await query(`ALTER TABLE registrations ADD COLUMN kicked_at VARCHAR(50)`);
+    await query(`ALTER TABLE registrations ADD COLUMN kicked_by VARCHAR(100)`);
+  } catch (err) {
+    // Ignore errors if columns already exist
   }
 
   // 2. Seed initial session 2026-10-03 if not exists
