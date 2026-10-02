@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang quản trị - Võ Đoàn Đăng Khôi | Trung tâm BDVH 144</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- Admin Header -->
+  <header class="admin-header">
+    <div class="admin-header-container">
+      <div class="admin-user-info">
+        <div class="admin-avatar">K</div>
+        <div class="admin-titles">
+          <h2>Võ Đoàn Đăng Khôi</h2>
+          <p>Trợ giảng &bull; Quyền Quản trị viên Trung tâm BDVH 144</p>
+        </div>
+      </div>
+
+      <div class="admin-actions">
+        <a href="/" class="btn-admin-link"><span>🌐</span> Xem trang học sinh</a>
+        <button class="btn-admin-link btn-admin-logout" onclick="handleLogout()"><span>🚪</span> Thoát phiên</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Admin Main Container -->
+  <main class="admin-container">
+
+    <!-- Session Selector Bar -->
+    <div class="session-bar">
+      <div class="session-selector-group">
+        <label for="select-session-picker">📅 Chọn buổi học:</label>
+        <select id="select-session-picker" class="select-session" onchange="onSessionChange()">
+          <!-- Populated dynamically -->
+        </select>
+        <button class="btn-outline" onclick="openNewSessionModal()" title="Tạo thêm buổi học">
+          <span>➕</span> Thêm buổi học
+        </button>
+      </div>
+
+      <div style="font-size: 0.88rem; color: #475569;" id="session-summary-badge">
+        Đang tải thông tin buổi học...
+      </div>
+    </div>
+
+    <!-- SECTION 1: CHỐT GHI DANH & XUẤT TRANG TÍNH EXCEL -->
+    <section class="admin-section" id="section-lock-excel">
+      <div class="section-header">
+        <div class="section-title">
+          <span>📊</span> Chốt ghi danh & Xuất trang tính Excel
+        </div>
+        <div class="section-actions" id="excel-actions-container">
+          <button class="btn-warning" id="btn-manual-lock" onclick="handleManualLock()">
+            <span>🔒</span> Chốt ghi danh & xuất trang tính
+          </button>
+          <button class="btn-success" id="btn-download-excel" onclick="handleDownloadExcel()">
+            <span>📥</span> Tải file Excel (.xlsx)
+          </button>
+        </div>
+      </div>
+
+      <div class="lock-excel-box">
+        <div class="lock-info">
+          <h4 id="lock-status-title">Trạng thái cổng ghi danh: Đang kiểm tra...</h4>
+          <p id="lock-status-desc">Cổng mở tự động từ 00:00 thứ Năm đến đúng 07:00 thứ Bảy. Khi chốt, hệ thống dừng nhận đăng ký ngay lập tức.</p>
+        </div>
+        <div id="excel-file-info" style="font-size: 0.85rem; color: #334155;">
+          Chưa xuất file Excel.
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: CHẤM CÔNG DẠY CỦA VÕ ĐOÀN ĐĂNG KHÔI -->
+    <section class="admin-section" id="section-timesheet">
+      <div class="section-header">
+        <div class="section-title">
+          <span>⏱️</span> Chấm công dạy của Võ Đoàn Đăng Khôi
+        </div>
+        <div style="font-size: 0.85rem; color: #64748b;">
+          Giờ chấm công lấy trực tiếp từ máy chủ (giờ Việt Nam), không nhận giờ do người dùng nhập.
+        </div>
+      </div>
+
+      <div class="punch-card-wrapper">
+        <!-- Lớp 10 Punch Card -->
+        <div class="punch-class-card" id="punch-card-lop10">
+          <div class="punch-class-title">📘 Lớp 10</div>
+          <div class="punch-class-sched">Lịch dạy: 07:30 – 09:30 thứ Bảy</div>
+          <div class="punch-buttons">
+            <button class="punch-btn-in" id="btn-in-lop10" onclick="handlePunchCheckIn('Lớp 10')">
+              <span>▶</span> Chấm công vào
+            </button>
+            <button class="punch-btn-out" id="btn-out-lop10" onclick="handlePunchCheckOut('Lớp 10')">
+              <span>⏹</span> Chấm công ra
+            </button>
+          </div>
+          <div class="punch-status-text" id="punch-status-lop10">
+            Chưa có thông tin chấm công hôm nay.
+          </div>
+        </div>
+
+        <!-- Lớp 11 Punch Card -->
+        <div class="punch-class-card" id="punch-card-lop11">
+          <div class="punch-class-title">📙 Lớp 11</div>
+          <div class="punch-class-sched">Lịch dạy: 17:30 – 19:00 thứ Bảy</div>
+          <div class="punch-buttons">
+            <button class="punch-btn-in" id="btn-in-lop11" onclick="handlePunchCheckIn('Lớp 11')">
+              <span>▶</span> Chấm công vào
+            </button>
+            <button class="punch-btn-out" id="btn-out-lop11" onclick="handlePunchCheckOut('Lớp 11')">
+              <span>⏹</span> Chấm công ra
+            </button>
+          </div>
+          <div class="punch-status-text" id="punch-status-lop11">
+            Chưa có thông tin chấm công hôm nay.
+          </div>
+        </div>
+      </div>
+
+      <!-- History timesheet table -->
+      <div style="margin-top: 1rem;">
+        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; color: #1e293b;">Lịch sử chấm công các buổi:</h4>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Ngày dạy</th>
+                <th>Lớp</th>
+                <th>Giờ lịch</th>
+                <th>Giờ vào thực tế</th>
+                <th>Giờ ra thực tế</th>
+                <th>Tổng thời gian thực tế</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody id="timesheet-history-tbody">
+              <tr>
+                <td colspan="7" class="empty-state">Đang tải lịch sử chấm công...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: ĐIỂM DANH GIÁO VIÊN & TRỢ GIẢNG -->
+    <section class="admin-section" id="section-teacher-attendance">
+      <div class="section-header">
+        <div class="section-title">
+          <span>👨‍🏫</span> Điểm danh Giáo viên & Trợ giảng
+        </div>
+        <div style="font-size: 0.85rem; color: #64748b;">
+          Ghi nhận theo từng lớp trong buổi học đã chọn
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Họ và tên</th>
+              <th>Vai trò</th>
+              <th>Lớp</th>
+              <th>Trạng thái điểm danh</th>
+              <th>Thời điểm cập nhật</th>
+            </tr>
+          </thead>
+          <tbody id="teacher-attendance-tbody">
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 4: ĐIỂM DANH HỌC SINH -->
+    <section class="admin-section" id="section-student-attendance">
+      <div class="section-header">
+        <div class="section-title">
+          <span>👥</span> Điểm danh Học sinh theo danh sách
+        </div>
+        <div class="section-actions">
+          <button class="btn-outline" onclick="loadSessionDetails()"><span>🔄</span> Tải lại</button>
+        </div>
+      </div>
+
+      <!-- Toggle self attendance -->
+      <div class="attendance-toggle-bar">
+        <div class="toggle-card">
+          <div class="toggle-card-title">Tự điểm danh Lớp 10:</div>
+          <button class="btn-outline" id="btn-toggle-self-10" onclick="handleToggleSelfAttendance('Lớp 10')">
+            Đang tải...
+          </button>
+        </div>
+        <div class="toggle-card">
+          <div class="toggle-card-title">Tự điểm danh Lớp 11:</div>
+          <button class="btn-outline" id="btn-toggle-self-11" onclick="handleToggleSelfAttendance('Lớp 11')">
+            Đang tải...
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter tabs for class in admin -->
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+        <button class="class-switch-btn active" id="admin-class-filter-all" onclick="filterAdminClass('ALL')">
+          Tất cả học sinh (<span id="count-all-students">0</span>)
+        </button>
+        <button class="class-switch-btn" id="admin-class-filter-10" onclick="filterAdminClass('Lớp 10')">
+          Lớp 10 (<span id="count-lop10-students">0</span>)
+        </button>
+        <button class="class-switch-btn" id="admin-class-filter-11" onclick="filterAdminClass('Lớp 11')">
+          Lớp 11 (<span id="count-lop11-students">0</span>)
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 50px; text-align: center;">STT</th>
+              <th>Họ và tên</th>
+              <th>Lớp</th>
+              <th>Trường đang học</th>
+              <th>Thời điểm ghi danh</th>
+              <th>Trạng thái điểm danh</th>
+              <th>Người cập nhật</th>
+            </tr>
+          </thead>
+          <tbody id="student-attendance-tbody">
+            <tr>
+              <td colspan="7" class="empty-state">Đang tải danh sách học sinh...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 5: TEST CUỐI GIỜ & KẾT QUẢ TEST -->
+    <section class="admin-section" id="section-test-management">
+      <div class="section-header">
+        <div class="section-title">
+          <span>📝</span> Quản lý Test cuối giờ
+        </div>
+        <div class="section-actions">
+          <button class="btn-primary" onclick="openTestEditor('Lớp 10')">
+            <span>➕</span> Soạn đề Lớp 10
+          </button>
+          <button class="btn-primary" onclick="openTestEditor('Lớp 11')">
+            <span>➕</span> Soạn đề Lớp 11
+          </button>
+        </div>
+      </div>
+
+      <div id="test-cards-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+        <!-- Test summary cards for Lop 10 and Lop 11 -->
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <h4 style="font-size: 1rem; font-weight: 800; margin-bottom: 0.75rem; color: #1e293b;">
+          Bảng kết quả làm bài của học sinh:
+        </h4>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 50px; text-align: center;">STT</th>
+                <th>Họ và tên học sinh</th>
+                <th>Lớp</th>
+                <th>Điểm số</th>
+                <th>Thời điểm nộp</th>
+              </tr>
+            </thead>
+            <tbody id="test-submissions-tbody">
+              <tr>
+                <td colspan="5" class="empty-state">Chưa có bài test hoặc chưa có lượt nộp bài nào.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: CREATE NEW SESSION -->
+  <div class="modal-overlay" id="new-session-modal">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeNewSessionModal()">&times;</button>
+      <div class="modal-header">
+        <h3>Tạo buổi học mới</h3>
+        <p>Chọn ngày thứ Bảy để khởi tạo buổi học mới</p>
+      </div>
+
+      <form id="new-session-form" onsubmit="handleCreateSession(event)" style="margin-top: 1.25rem;">
+        <div class="form-group">
+          <label class="form-label" for="new-session-date">Ngày học (thứ Bảy):</label>
+          <input type="date" id="new-session-date" class="form-input" required>
+        </div>
+        <button type="submit" class="submit-btn" style="margin-top: 1rem;">
+          Khởi tạo buổi học
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: TEST EDITOR -->
+  <div class="modal-overlay" id="test-editor-modal">
+    <div class="modal-content" style="max-width: 720px; max-height: 90vh; overflow-y: auto;">
+      <button class="modal-close-btn" onclick="closeTestEditorModal()">&times;</button>
+      <div class="modal-header">
+        <h3 id="test-editor-title">Soạn đề test cuối giờ</h3>
+        <p id="test-editor-subtitle">Hỗ trợ trắc nghiệm 1 đáp án, đúng/sai và trả lời ngắn khách quan.</p>
+      </div>
+
+      <form id="test-editor-form" onsubmit="handleSaveTest(event)" style="margin-top: 1.25rem;">
+        <input type="hidden" id="edit-test-class">
+        <div class="form-group">
+          <label class="form-label" for="edit-test-name">Tên bài test:</label>
+          <input type="text" id="edit-test-name" class="form-input" placeholder="Ví dụ: Test ôn tập kiến thức buổi 1" required>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 1.5rem 0 0.75rem;">
+          <h4 style="font-size: 1rem; font-weight: 800; color: #1e3a8a;">Danh sách câu hỏi:</h4>
+          <button type="button" class="btn-outline" onclick="addQuestionCard()">
+            <span>➕</span> Thêm câu hỏi
+          </button>
+        </div>
+
+        <div id="test-questions-list">
+          <!-- Dynamic question forms -->
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="submit" class="submit-btn" style="flex: 2; margin-top: 0;">
+            💾 Lưu đề test
+          </button>
+          <button type="button" class="btn-outline" style="flex: 1;" onclick="closeTestEditorModal()">
+            Đóng
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

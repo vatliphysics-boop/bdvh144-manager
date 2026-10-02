@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghi danh & Quản lý lớp học - Trung tâm BDVH 144</title>
+  <meta name="description" content="Hệ thống ghi danh và quản lý lớp học trực tuyến dành cho học sinh Lớp 10 và Lớp 11 - Trung tâm BDVH 144.">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="/" class="brand-wrapper" id="brand-home-link">
+        <div class="brand-icon">📚</div>
+        <div class="brand-info">
+          <h1>Trung tâm BDVH 144</h1>
+          <p>Thầy Nguyễn Khoa &bull; Trợ giảng Võ Đoàn Đăng Khôi</p>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <button class="btn-header-admin" id="btn-open-login-modal" title="Dành riêng cho Quản lý & Giáo viên">
+          <span>🔒</span> Quản lý
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+
+    <!-- Top Tabs (Ghi danh / Danh sách lớp) -->
+    <nav class="nav-tabs-wrapper" aria-label="Điều hướng chính">
+      <button class="nav-tab-btn active" id="tab-btn-register" onclick="switchMainTab('register')">
+        <span>✍️</span> Phiếu ghi danh
+      </button>
+      <button class="nav-tab-btn" id="tab-btn-classes" onclick="switchMainTab('classes')">
+        <span>📋</span> Danh sách lớp học
+      </button>
+    </nav>
+
+    <!-- Schedule Info Banner -->
+    <section class="schedule-banner" id="schedule-banner">
+      <div class="banner-top">
+        <div class="session-badge" id="session-date-display">
+          <span>📅</span> Buổi học: Đang tải...
+        </div>
+        <div class="status-badge open" id="reg-status-badge">
+          <span>⏳</span> Đang kiểm tra...
+        </div>
+      </div>
+
+      <div class="banner-classes-grid">
+        <div class="class-time-card">
+          <div class="class-name"><span>📘</span> Lớp 10</div>
+          <div class="class-hours">07:30 – 09:30</div>
+          <div class="class-meta">thứ Bảy hằng tuần</div>
+        </div>
+
+        <div class="class-time-card">
+          <div class="class-name"><span>📙</span> Lớp 11</div>
+          <div class="class-hours">17:30 – 19:00</div>
+          <div class="class-meta">thứ Bảy hằng tuần</div>
+        </div>
+      </div>
+
+      <div class="banner-teachers">
+        <span>👨‍🏫 <strong>Giáo viên:</strong> thầy Nguyễn Khoa</span>
+        <span>🧑‍💼 <strong>Trợ giảng:</strong> Võ Đoàn Đăng Khôi</span>
+        <span>📍 <strong>Múi giờ:</strong> Asia/Ho_Chi_Minh</span>
+      </div>
+    </section>
+
+    <!-- VIEW 1: REGISTRATION FORM -->
+    <section id="view-register" class="tab-view">
+      <div class="form-card" id="reg-form-container">
+        <div class="form-header">
+          <h2>Phiếu ghi danh học sinh</h2>
+          <p>Vui lòng điền thông tin chính xác để hoàn tất ghi danh vào lớp học thứ Bảy.</p>
+        </div>
+
+        <form id="registration-form" onsubmit="handleRegistrationSubmit(event)">
+          <!-- Họ và tên (Bắt buộc) -->
+          <div class="form-group">
+            <label class="form-label" for="student-name">
+              Họ và tên học sinh <span class="req">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="student-name" 
+              class="form-input" 
+              placeholder="Ví dụ: Nguyễn Văn An" 
+              required
+              autocomplete="name"
+            >
+          </div>
+
+          <!-- Chọn lớp (Bắt buộc) -->
+          <div class="form-group">
+            <label class="form-label">
+              Chọn lớp đăng ký <span class="req">*</span>
+            </label>
+            <div class="class-selection-grid">
+              <label>
+                <input type="radio" name="class_choice" value="Lớp 10" class="class-option-radio" checked onchange="updateSelectedClassDisplay()">
+                <div class="class-option-card">
+                  <div class="class-title">
+                    <span>📘 Lớp 10</span>
+                    <span class="class-badge-time">07:30 – 09:30</span>
+                  </div>
+                  <div class="class-desc">Buổi sáng thứ Bảy</div>
+                </div>
+              </label>
+
+              <label>
+                <input type="radio" name="class_choice" value="Lớp 11" class="class-option-radio" onchange="updateSelectedClassDisplay()">
+                <div class="class-option-card">
+                  <div class="class-title">
+                    <span>📙 Lớp 11</span>
+                    <span class="class-badge-time">17:30 – 19:00</span>
+                  </div>
+                  <div class="class-desc">Buổi chiều thứ Bảy</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Trường đang học (Không bắt buộc) -->
+          <div class="form-group">
+            <label class="form-label" for="student-school">
+              Trường đang học <span style="font-weight: 400; color: var(--text-muted);">(không bắt buộc)</span>
+            </label>
+            <input 
+              type="text" 
+              id="student-school" 
+              class="form-input" 
+              placeholder="Ví dụ: THPT Chuyên Lê Hồng Phong"
+            >
+          </div>
+
+          <!-- Confirmation info before submitting -->
+          <div class="info-notice-box" id="reg-pre-submit-info">
+            📌 Bạn đang đăng ký: <strong>Lớp 10</strong> &bull; Giờ học: <strong>07:30–09:30 thứ Bảy</strong>.
+          </div>
+
+          <button type="submit" class="submit-btn" id="btn-submit-registration">
+            <span>🚀</span> Xác nhận ghi danh
+          </button>
+        </form>
+      </div>
+
+      <!-- Closed Notification (Shown when outside window or locked) -->
+      <div class="form-card closed-state-card" id="reg-closed-container" style="display: none;">
+        <div class="closed-icon">🔒</div>
+        <h3 id="closed-title">Cổng ghi danh hiện đang đóng</h3>
+        <p id="closed-desc">
+          Cổng ghi danh tự động mở từ 00:00 thứ Năm đến 07:00 thứ Bảy hằng tuần.
+        </p>
+        <div class="info-notice-box" id="closed-next-open-box">
+          ⏰ Thời gian mở ghi danh tiếp theo: Đang cập nhật...
+        </div>
+        <div style="margin-top: 1.5rem;">
+          <button class="btn-primary" onclick="switchMainTab('classes')">
+            <span>📋</span> Xem danh sách lớp học
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: REGISTRATION SUCCESS SCREEN -->
+    <section id="view-success" class="tab-view" style="display: none;">
+      <div class="success-screen">
+        <div class="success-icon-wrapper">✓</div>
+        <h2 class="success-title">Ghi danh thành công</h2>
+        <p class="success-subtitle">Hệ thống đã lưu thông tin ghi danh của bạn vào danh sách lớp.</p>
+
+        <div class="confirmation-card">
+          <div class="confirm-row">
+            <span class="confirm-label">Họ và tên học sinh:</span>
+            <span class="confirm-value highlight" id="succ-student-name">—</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Lớp đã đăng ký:</span>
+            <span class="confirm-value" id="succ-class-name">—</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Ngày học:</span>
+            <span class="confirm-value" id="succ-session-date">—</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Giờ học chính xác:</span>
+            <span class="confirm-value" id="succ-class-time">—</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Trung tâm:</span>
+            <span class="confirm-value">Trung tâm BDVH 144</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Giáo viên:</span>
+            <span class="confirm-value">thầy Nguyễn Khoa</span>
+          </div>
+          <div class="confirm-row">
+            <span class="confirm-label">Trợ giảng:</span>
+            <span class="confirm-value">Võ Đoàn Đăng Khôi</span>
+          </div>
+        </div>
+
+        <div class="success-actions">
+          <a href="https://maps.app.goo.gl/RsTMMvJtbgwDP5fQ7" target="_blank" rel="noopener noreferrer" class="btn-maps" id="btn-open-google-maps">
+            <span>📍</span> Mở Google Maps
+          </a>
+          <button class="btn-view-class" id="btn-goto-class-list" onclick="viewRegisteredClassList()">
+            <span>📋</span> Xem lớp học
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: CLASS LISTS -->
+    <section id="view-classes" class="tab-view" style="display: none;">
+      <div class="class-view-header">
+        <div class="class-switcher" role="tablist">
+          <button class="class-switch-btn active" id="tab-class-10" onclick="switchClassSubTab('Lớp 10')">
+            📘 Lớp 10 (07:30–09:30)
+          </button>
+          <button class="class-switch-btn" id="tab-class-11" onclick="switchClassSubTab('Lớp 11')">
+            📙 Lớp 11 (17:30–19:00)
+          </button>
+        </div>
+
+        <button class="btn-outline" onclick="loadClassesData()" title="Làm mới danh sách">
+          <span>🔄</span> Tải lại
+        </button>
+      </div>
+
+      <!-- Class Info Card -->
+      <div class="class-info-card">
+        <div class="class-meta-item">
+          <span class="class-meta-label">Ngày học</span>
+          <span class="class-meta-value" id="cur-class-date">—</span>
+        </div>
+        <div class="class-meta-item">
+          <span class="class-meta-label">Giờ học</span>
+          <span class="class-meta-value" id="cur-class-time">—</span>
+        </div>
+        <div class="class-meta-item">
+          <span class="class-meta-label">Số học sinh đã ghi danh</span>
+          <span class="class-meta-value" id="cur-class-count">0 học sinh</span>
+        </div>
+      </div>
+
+      <!-- Self Attendance Banner (If opened by Khôi) -->
+      <div class="self-attend-banner" id="self-attend-banner" style="display: none;">
+        <div>
+          <strong>📍 Điểm danh trực tiếp:</strong>
+          <span id="self-attend-msg">Trợ giảng đã mở cổng điểm danh cho buổi học này!</span>
+        </div>
+        <button class="btn-self-attend" id="btn-do-self-attend" onclick="handleSelfAttendance()">
+          ✓ Điểm danh Có mặt ngay
+        </button>
+      </div>
+
+      <!-- Test End of Class Banner (If opened by Khôi) -->
+      <div class="test-open-banner" id="test-open-banner" style="display: none;">
+        <div>
+          <strong>📝 Test cuối giờ:</strong>
+          <span id="test-banner-title">Bài test đang mở. Học sinh vui lòng làm bài kiểm tra.</span>
+        </div>
+        <button class="btn-take-test" id="btn-open-test-modal" onclick="openStudentTestModal()">
+          Bắt đầu làm bài
+        </button>
+      </div>
+
+      <!-- Student List Table -->
+      <div class="table-card">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 60px; text-align: center;">STT</th>
+                <th>Họ và tên</th>
+                <th>Trường đang học</th>
+                <th style="width: 160px; text-align: center;">Trạng thái điểm danh</th>
+              </tr>
+            </thead>
+            <tbody id="student-table-body">
+              <tr>
+                <td colspan="4" class="empty-state">
+                  <div class="empty-state-icon">⏳</div>
+                  <div>Đang tải dữ liệu lớp học...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: LOGIN / ACCESS CODE -->
+  <div class="modal-overlay" id="login-modal" onclick="closeLoginModalOnBackdrop(event)">
+    <div class="modal-content">
+      <button class="modal-close-btn" onclick="closeLoginModal()">&times;</button>
+      <div class="modal-header">
+        <h3>Quản lý trung tâm</h3>
+        <p>Nhập mã truy cập để vào đúng phân quyền làm việc.</p>
+      </div>
+
+      <form id="login-form" onsubmit="handleLoginSubmit(event)" style="margin-top: 1.25rem;">
+        <div class="form-group">
+          <label class="form-label" for="access-code-input">Mã truy cập quản lý</label>
+          <input 
+            type="password" 
+            id="access-code-input" 
+            class="form-input" 
+            placeholder="Nhập mã truy cập..." 
+            required 
+            autocomplete="off"
+          >
+        </div>
+
+        <div style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1.25rem; line-height: 1.4;">
+          🔒 Hệ thống bảo mật: Mã truy cập được băm bảo mật tại máy chủ, giới hạn số lần thử và lưu phiên qua cookie HttpOnly.
+        </div>
+
+        <button type="submit" class="submit-btn" id="btn-login-submit" style="margin-top: 0;">
+          Xác nhận truy cập
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: STUDENT TEST -->
+  <div class="modal-overlay" id="student-test-modal">
+    <div class="modal-content" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
+      <button class="modal-close-btn" onclick="closeStudentTestModal()">&times;</button>
+      <div class="modal-header">
+        <h3 id="student-test-title">Bài test cuối giờ</h3>
+        <p id="student-test-class-info">—</p>
+      </div>
+
+      <div id="student-test-body" style="margin-top: 1.25rem;">
+        <!-- Test questions dynamically rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <p><strong>Trung tâm BDVH 144</strong> &bull; Giáo viên: thầy Nguyễn Khoa &bull; Trợ giảng: Võ Đoàn Đăng Khôi</p>
+    <p style="margin-top: 0.25rem; font-size: 0.8rem; color: var(--text-muted);">
+      Lớp 10: thứ Bảy 07:30–09:30 &bull; Lớp 11: thứ Bảy 17:30–19:00 &bull; 
+      <a href="https://maps.app.goo.gl/RsTMMvJtbgwDP5fQ7" target="_blank" rel="noopener noreferrer">Mở Google Maps</a>
+    </p>
+  </footer>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

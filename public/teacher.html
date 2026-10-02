@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo cáo Chấm công Trợ giảng - Thầy Nguyễn Khoa | Trung tâm BDVH 144</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- Teacher Header -->
+  <header class="admin-header" style="background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);">
+    <div class="admin-header-container">
+      <div class="admin-user-info">
+        <div class="admin-avatar" style="background: #ffffff; color: #1e3a8a;">👨‍🏫</div>
+        <div class="admin-titles">
+          <h2>Thầy Nguyễn Khoa</h2>
+          <p>Giáo viên &bull; Báo cáo Chấm công Trợ giảng Võ Đoàn Đăng Khôi</p>
+        </div>
+      </div>
+
+      <div class="admin-actions">
+        <a href="/" class="btn-admin-link"><span>🌐</span> Xem trang học sinh</a>
+        <button class="btn-admin-link btn-admin-logout" onclick="handleLogout()"><span>🚪</span> Thoát phiên</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="admin-container">
+
+    <!-- Overview Stats Cards -->
+    <div class="stats-cards-grid">
+      <div class="stat-card">
+        <div class="stat-label">Tổng số buổi đã hoàn thành</div>
+        <div class="stat-number" id="stat-total-sessions">0 buổi</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Tổng thời gian giảng dạy thực tế</div>
+        <div class="stat-number" id="stat-total-hours" style="color: #059669;">0 phút</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Buổi đang diễn ra (chưa kết thúc)</div>
+        <div class="stat-number" id="stat-ongoing-sessions" style="color: #d97706;">0 buổi</div>
+      </div>
+    </div>
+
+    <!-- Section: Timesheet Report -->
+    <section class="admin-section">
+      <div class="section-header">
+        <div class="section-title">
+          <span>📋</span> Nhật ký chấm công trợ giảng Võ Đoàn Đăng Khôi
+        </div>
+        <div style="font-size: 0.85rem; color: #64748b;">
+          Chế độ xem báo cáo chính xác theo giờ thực tế ghi nhận từ máy chủ.
+        </div>
+      </div>
+
+      <!-- Date Filter Bar -->
+      <div class="filter-bar">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <label for="filter-from-date" style="font-size: 0.88rem; font-weight: 700;">Từ ngày:</label>
+          <input type="date" id="filter-from-date" class="filter-input">
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <label for="filter-to-date" style="font-size: 0.88rem; font-weight: 700;">Đến ngày:</label>
+          <input type="date" id="filter-to-date" class="filter-input">
+        </div>
+
+        <button class="btn-primary" onclick="loadTeacherReport()">
+          <span>🔍</span> Lọc báo cáo
+        </button>
+
+        <button class="btn-outline" onclick="resetFilter()">
+          <span>🔄</span> Đặt lại
+        </button>
+      </div>
+
+      <!-- Timesheet Table -->
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Ngày dạy</th>
+              <th>Lớp</th>
+              <th>Khung giờ dự kiến</th>
+              <th>Giờ vào thực tế</th>
+              <th>Giờ ra thực tế</th>
+              <th>Tổng thời gian buổi học</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody id="teacher-timesheet-tbody">
+            <tr>
+              <td colspan="7" class="empty-state">Đang tải dữ liệu chấm công...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <p><strong>Trung tâm BDVH 144</strong> &bull; Báo cáo chấm công minh bạch &bull; Hệ thống quản lý học sinh và lớp học</p>
+  </footer>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/js/teacher.js"></script>
+</body>
+</html>

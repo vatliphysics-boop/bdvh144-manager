@@ -1,0 +1,29 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Node modules & dependencies
+node_modules/
+
+# Local databases
+database.sqlite*
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+.pgdata/
+
+# Excel files generated at runtime
+storage/excel/*
+!storage/excel/.gitkeep
+*.xlsx
+*.xls
+
+# Logs & temp files
+*.log
+.DS_Store
+dist/
+build/
+tmp/
