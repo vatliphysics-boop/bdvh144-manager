@@ -49,6 +49,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnLogin) {
     btnLogin.addEventListener('click', openLoginModal);
   }
+
+  // Refresh data when returning to tab
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      loadCurrentSession();
+    }
+  });
 });
 
 // Load Current Session & Registration Status
@@ -117,6 +124,18 @@ async function loadCurrentSession() {
 
         updateBanners(data.session, data.myRegistration.attendance_status);
       }
+    } else {
+      // If no registration (e.g., deleted by admin)
+      appState.registeredClass = null;
+      document.getElementById('view-register').style.display = 'block';
+      document.getElementById('view-success').style.display = 'none';
+      document.getElementById('view-kicked').style.display = 'none';
+      
+      const selfBanner = document.getElementById('self-attend-banner');
+      if (selfBanner) selfBanner.style.display = 'none';
+      
+      const testBanner = document.getElementById('test-banner');
+      if (testBanner) testBanner.style.display = 'none';
     }
 
   } catch (err) {
