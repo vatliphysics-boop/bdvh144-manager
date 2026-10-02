@@ -32,14 +32,6 @@
   <main class="main-content">
 
     <!-- Top Tabs (Ghi danh / Danh sách lớp) -->
-    <nav class="nav-tabs-wrapper" aria-label="Điều hướng chính">
-      <button class="nav-tab-btn active" id="tab-btn-register" onclick="switchMainTab('register')">
-        <span>✍️</span> Phiếu ghi danh
-      </button>
-      <button class="nav-tab-btn" id="tab-btn-classes" onclick="switchMainTab('classes')">
-        <span>📋</span> Danh sách lớp học
-      </button>
-    </nav>
 
     <!-- Schedule Info Banner -->
     <section class="schedule-banner" id="schedule-banner">
@@ -77,7 +69,7 @@
     <section id="view-register" class="tab-view">
       <div class="form-card" id="reg-form-container">
         <div class="form-header">
-          <h2>Phiếu ghi danh học sinh</h2>
+          <h2>Phiếu ghi danh buổi học</h2>
           <p>Vui lòng điền thông tin chính xác để hoàn tất ghi danh vào lớp học thứ Bảy.</p>
         </div>
 
@@ -161,11 +153,6 @@
         <div class="info-notice-box" id="closed-next-open-box">
           ⏰ Thời gian mở ghi danh tiếp theo: Đang cập nhật...
         </div>
-        <div style="margin-top: 1.5rem;">
-          <button class="btn-primary" onclick="switchMainTab('classes')">
-            <span>📋</span> Xem danh sách lớp học
-          </button>
-        </div>
       </div>
     </section>
 
@@ -174,7 +161,32 @@
       <div class="success-screen">
         <div class="success-icon-wrapper">✓</div>
         <h2 class="success-title">Ghi danh thành công</h2>
-        <p class="success-subtitle">Hệ thống đã lưu thông tin ghi danh của bạn vào danh sách lớp.</p>
+        <p class="success-subtitle">Hệ thống đã lưu thông tin ghi danh của bạn.</p>
+
+        <!-- Banners for Attendance and Test -->
+        <div id="student-banners-container" style="margin-bottom: 1.5rem;">
+          <!-- Self Attendance Banner -->
+          <div class="self-attend-banner" id="self-attend-banner" style="display: none;">
+            <div>
+              <strong>📍 Điểm danh trực tiếp:</strong>
+              <span id="self-attend-msg">Trợ giảng đã mở cổng điểm danh cho buổi học này!</span>
+            </div>
+            <button class="btn-self-attend" id="btn-do-self-attend" onclick="handleSelfAttendance()">
+              ✓ Điểm danh Có mặt ngay
+            </button>
+          </div>
+
+          <!-- Test End of Class Banner -->
+          <div class="test-open-banner" id="test-open-banner" style="display: none;">
+            <div>
+              <strong>📝 Test cuối giờ:</strong>
+              <span id="test-banner-title">Bài test đang mở. Vui lòng làm bài kiểm tra.</span>
+            </div>
+            <button class="btn-take-test" id="btn-open-test-modal" onclick="openStudentTestModal()">
+              Bắt đầu làm bài
+            </button>
+          </div>
+        </div>
 
         <div class="confirmation-card">
           <div class="confirm-row">
@@ -209,94 +221,13 @@
 
         <div class="success-actions">
           <a href="https://maps.app.goo.gl/RsTMMvJtbgwDP5fQ7" target="_blank" rel="noopener noreferrer" class="btn-maps" id="btn-open-google-maps">
-            <span>📍</span> Mở Google Maps
+            <span>📍</span> Chỉ đường đến trung tâm
           </a>
-          <button class="btn-view-class" id="btn-goto-class-list" onclick="viewRegisteredClassList()">
-            <span>📋</span> Xem lớp học
-          </button>
         </div>
       </div>
     </section>
 
-    <!-- VIEW 3: CLASS LISTS -->
-    <section id="view-classes" class="tab-view" style="display: none;">
-      <div class="class-view-header">
-        <div class="class-switcher" role="tablist">
-          <button class="class-switch-btn active" id="tab-class-10" onclick="switchClassSubTab('Lớp 10')">
-            📘 Lớp 10 (07:30–09:30)
-          </button>
-          <button class="class-switch-btn" id="tab-class-11" onclick="switchClassSubTab('Lớp 11')">
-            📙 Lớp 11 (17:30–19:00)
-          </button>
-        </div>
 
-        <button class="btn-outline" onclick="loadClassesData()" title="Làm mới danh sách">
-          <span>🔄</span> Tải lại
-        </button>
-      </div>
-
-      <!-- Class Info Card -->
-      <div class="class-info-card">
-        <div class="class-meta-item">
-          <span class="class-meta-label">Ngày học</span>
-          <span class="class-meta-value" id="cur-class-date">—</span>
-        </div>
-        <div class="class-meta-item">
-          <span class="class-meta-label">Giờ học</span>
-          <span class="class-meta-value" id="cur-class-time">—</span>
-        </div>
-        <div class="class-meta-item">
-          <span class="class-meta-label">Số học sinh đã ghi danh</span>
-          <span class="class-meta-value" id="cur-class-count">0 học sinh</span>
-        </div>
-      </div>
-
-      <!-- Self Attendance Banner (If opened by Khôi) -->
-      <div class="self-attend-banner" id="self-attend-banner" style="display: none;">
-        <div>
-          <strong>📍 Điểm danh trực tiếp:</strong>
-          <span id="self-attend-msg">Trợ giảng đã mở cổng điểm danh cho buổi học này!</span>
-        </div>
-        <button class="btn-self-attend" id="btn-do-self-attend" onclick="handleSelfAttendance()">
-          ✓ Điểm danh Có mặt ngay
-        </button>
-      </div>
-
-      <!-- Test End of Class Banner (If opened by Khôi) -->
-      <div class="test-open-banner" id="test-open-banner" style="display: none;">
-        <div>
-          <strong>📝 Test cuối giờ:</strong>
-          <span id="test-banner-title">Bài test đang mở. Học sinh vui lòng làm bài kiểm tra.</span>
-        </div>
-        <button class="btn-take-test" id="btn-open-test-modal" onclick="openStudentTestModal()">
-          Bắt đầu làm bài
-        </button>
-      </div>
-
-      <!-- Student List Table -->
-      <div class="table-card">
-        <div class="table-responsive">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th style="width: 60px; text-align: center;">STT</th>
-                <th>Họ và tên</th>
-                <th>Trường đang học</th>
-                <th style="width: 160px; text-align: center;">Trạng thái điểm danh</th>
-              </tr>
-            </thead>
-            <tbody id="student-table-body">
-              <tr>
-                <td colspan="4" class="empty-state">
-                  <div class="empty-state-icon">⏳</div>
-                  <div>Đang tải dữ liệu lớp học...</div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
 
   </main>
 

@@ -94,35 +94,62 @@ async function loadCurrentSession() {
 
     updateSelectedClassDisplay();
 
+    // If user already registered, show success screen immediately
+    if (data.myRegistration) {
+      appState.registeredClass = data.myRegistration.class_name || data.myRegistration.className;
+      
+      const classInfo = data.classes[appState.registeredClass];
+      document.getElementById('succ-student-name').textContent = data.myRegistration.full_name || data.myRegistration.fullName || '—';
+      document.getElementById('succ-class-name').textContent = appState.registeredClass;
+      document.getElementById('succ-session-date').textContent = data.session.formattedDate + ' (thứ Bảy)';
+      document.getElementById('succ-class-time').textContent = classInfo ? classInfo.timeSlot : '—';
+      
+      document.getElementById('view-register').style.display = 'none';
+      document.getElementById('view-success').style.display = 'block';
+
+      updateBanners(data.session, data.myRegistration.attendance_status);
+    }
+
   } catch (err) {
     console.error('Lỗi nạp phiên học:', err);
     showToast('Lỗi kết nối máy chủ', 'error');
   }
 }
 
-// Tab Switching (Phiếu ghi danh / Danh sách lớp)
-function switchMainTab(tab) {
-  const tabReg = document.getElementById('tab-btn-register');
-  const tabClass = document.getElementById('tab-btn-classes');
-  const viewReg = document.getElementById('view-register');
-  const viewSuccess = document.getElementById('view-success');
-  const viewClasses = document.getElementById('view-classes');
+function updateBanners(session, attendanceStatus) {
+  const className = appState.registeredClass;
+  if (!className) return;
 
-  if (tab === 'register') {
-    tabReg.classList.add('active');
-    tabClass.classList.remove('active');
-    viewReg.style.display = 'block';
-    viewSuccess.style.display = 'none';
-    viewClasses.style.display = 'none';
-  } else if (tab === 'classes') {
-    tabClass.classList.add('active');
-    tabReg.classList.remove('active');
-    viewReg.style.display = 'none';
-    viewSuccess.style.display = 'none';
-    viewClasses.style.display = 'block';
-    loadClassesData();
+  // Check self attendance banner
+  const selfBanner = document.getElementById('self-attend-banner');
+  const isSelfAttendOpen = className === 'Lớp 10' ? session.selfAttendanceLop10 : session.selfAttendanceLop11;
+
+  if (isSelfAttendOpen) {
+    selfBanner.style.display = 'flex';
+    const btnSelf = document.getElementById('btn-do-self-attend');
+    if (attendanceStatus === 'Có mặt') {
+      btnSelf.disabled = true;
+      btnSelf.textContent = '✓ Bạn đã được điểm danh Có mặt';
+    } else {
+      btnSelf.disabled = false;
+      btnSelf.textContent = '✓ Điểm danh Có mặt ngay';
+    }
+  } else {
+    selfBanner.style.display = 'none';
+  }
+
+  // Check test banner
+  const testBanner = document.getElementById('test-open-banner');
+  const hasOpenTest = className === 'Lớp 10' ? session.hasOpenTestLop10 : session.hasOpenTestLop11;
+
+  if (hasOpenTest) {
+    testBanner.style.display = 'flex';
+  } else {
+    testBanner.style.display = 'none';
   }
 }
+
+
 
 // Update selected class info before submit
 function updateSelectedClassDisplay() {
@@ -192,6 +219,10 @@ async function handleRegistrationSubmit(event) {
     document.getElementById('view-success').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
+    if (appState.session) {
+       updateBanners(appState.session, 'Chưa điểm danh');
+    }
+
     showToast('Ghi danh thành công!', 'success');
 
     // Reset idempotency key for any future registrations
@@ -205,133 +236,7 @@ async function handleRegistrationSubmit(event) {
   }
 }
 
-// "Xem lớp học" button on success screen
-function viewRegisteredClassList() {
-  switchMainTab('classes');
-  if (appState.registeredClass) {
-    switchClassSubTab(appState.registeredClass);
-  }
-}
 
-// Switch between Lớp 10 and Lớp 11 in class list
-function switchClassSubTab(className) {
-  appState.currentClassTab = className;
-
-  const btn10 = document.getElementById('tab-class-10');
-  const btn11 = document.getElementById('tab-class-11');
-
-  if (className === 'Lớp 10') {
-    btn10.classList.add('active');
-    btn11.classList.remove('active');
-  } else {
-    btn11.classList.add('active');
-    btn10.classList.remove('active');
-  }
-
-  renderClassListTable();
-}
-
-// Load class list data
-async function loadClassesData() {
-  const tbody = document.getElementById('student-table-body');
-  tbody.innerHTML = `<tr><td colspan="4" class="empty-state"><div class="empty-state-icon">⏳</div><div>Đang cập nhật danh sách...</div></td></tr>`;
-
-  try {
-    const res = await fetch('/api/student/classes-data');
-    const data = await res.json();
-
-    if (!data.success) {
-      showToast(data.message || 'Lỗi tải danh sách lớp', 'error');
-      return;
-    }
-
-    appState.classesData = data;
-    renderClassListTable();
-
-  } catch (err) {
-    console.error('Lỗi tải danh sách lớp:', err);
-    showToast('Lỗi kết nối máy chủ', 'error');
-  }
-}
-
-// Render student table for active class
-function renderClassListTable() {
-  if (!appState.classesData) return;
-
-  const className = appState.currentClassTab;
-  const classData = appState.classesData.classes[className];
-  const session = appState.classesData.session;
-
-  // Update meta
-  document.getElementById('cur-class-date').textContent = `${session.formattedDate} (thứ Bảy)`;
-  document.getElementById('cur-class-time').textContent = classData.info.timeSlot;
-  document.getElementById('cur-class-count').textContent = `${classData.count} học sinh`;
-
-  // Check self attendance banner
-  const selfBanner = document.getElementById('self-attend-banner');
-  const isSelfAttendOpen = className === 'Lớp 10' ? session.selfAttendanceLop10 : session.selfAttendanceLop11;
-  const myReg = classData.myRegistration;
-
-  if (isSelfAttendOpen && myReg) {
-    selfBanner.style.display = 'flex';
-    const btnSelf = document.getElementById('btn-do-self-attend');
-    if (myReg.attendanceStatus === 'Có mặt') {
-      btnSelf.disabled = true;
-      btnSelf.textContent = '✓ Bạn đã được điểm danh Có mặt';
-    } else {
-      btnSelf.disabled = false;
-      btnSelf.textContent = '✓ Điểm danh Có mặt ngay';
-    }
-  } else {
-    selfBanner.style.display = 'none';
-  }
-
-  // Check test banner
-  const testBanner = document.getElementById('test-open-banner');
-  const hasOpenTest = className === 'Lớp 10' ? session.hasOpenTestLop10 : session.hasOpenTestLop11;
-
-  if (hasOpenTest && myReg) {
-    testBanner.style.display = 'flex';
-  } else {
-    testBanner.style.display = 'none';
-  }
-
-  // Render Table
-  const tbody = document.getElementById('student-table-body');
-  if (classData.students.length === 0) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="4" class="empty-state">
-          <div class="empty-state-icon">📋</div>
-          <div>Chưa có học sinh ghi danh cho ${className} buổi học này.</div>
-        </td>
-      </tr>
-    `;
-    return;
-  }
-
-  tbody.innerHTML = classData.students.map(s => {
-    const isMeClass = s.isMe ? 'highlight-me' : '';
-    const badgeClass = s.attendanceStatus === 'Có mặt' ? 'present'
-      : s.attendanceStatus === 'Đi muộn' ? 'late'
-      : s.attendanceStatus === 'Vắng' ? 'absent'
-      : 'unmarked';
-
-    return `
-      <tr class="${isMeClass}">
-        <td style="text-align: center; font-weight: 700; color: var(--text-muted);">${s.stt}</td>
-        <td>
-          <strong>${escapeHtml(s.fullName)}</strong>
-          ${s.isMe ? ' <span style="font-size: 0.78rem; color: #2563eb; font-weight: 700;">(Bạn)</span>' : ''}
-        </td>
-        <td style="color: var(--text-secondary);">${escapeHtml(s.schoolName)}</td>
-        <td style="text-align: center;">
-          <span class="attendance-badge ${badgeClass}">${s.attendanceStatus}</span>
-        </td>
-      </tr>
-    `;
-  }).join('');
-}
 
 // Student self attendance handler
 async function handleSelfAttendance() {
@@ -343,7 +248,7 @@ async function handleSelfAttendance() {
     const res = await fetch('/api/student/self-attend', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ class_name: appState.currentClassTab })
+      body: JSON.stringify({ class_name: appState.registeredClass })
     });
 
     const data = await res.json();
@@ -355,7 +260,7 @@ async function handleSelfAttendance() {
     }
 
     showToast(data.message, 'success');
-    loadClassesData();
+    loadCurrentSession();
 
   } catch (err) {
     console.error('Lỗi điểm danh:', err);
@@ -376,7 +281,7 @@ async function openStudentTestModal() {
   modal.classList.add('open');
 
   try {
-    const res = await fetch(`/api/student/test?class_name=${encodeURIComponent(appState.currentClassTab)}`);
+    const res = await fetch(`/api/student/test?class_name=${encodeURIComponent(appState.registeredClass)}`);
     const data = await res.json();
 
     if (!data.success || !data.hasTest) {
@@ -386,7 +291,7 @@ async function openStudentTestModal() {
 
     appState.activeTest = data.test;
     title.textContent = data.test.title;
-    info.textContent = `${appState.currentClassTab} • Trung tâm BDVH 144`;
+    info.textContent = `${appState.registeredClass} • Trung tâm BDVH 144`;
 
     if (data.alreadySubmitted) {
       body.innerHTML = `

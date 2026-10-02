@@ -70,6 +70,13 @@ router.get('/current-session', async (req, res) => {
       myRegistration = myRegRes.rows[0] || null;
     }
 
+    // Check test availability
+    const test10Res = await query('SELECT id, is_open FROM tests WHERE session_id = $1 AND class_name = $2', [session.id, 'Lớp 10']);
+    const test11Res = await query('SELECT id, is_open FROM tests WHERE session_id = $1 AND class_name = $2', [session.id, 'Lớp 11']);
+    
+    const testLop10 = test10Res.rows[0];
+    const testLop11 = test11Res.rows[0];
+
     res.json({
       success: true,
       session: {
@@ -81,7 +88,9 @@ router.get('/current-session', async (req, res) => {
         window,
         nextOpenDisplay,
         selfAttendanceLop10: session.self_attendance_lop10 === 1,
-        selfAttendanceLop11: session.self_attendance_lop11 === 1
+        selfAttendanceLop11: session.self_attendance_lop11 === 1,
+        hasOpenTestLop10: testLop10 ? testLop10.is_open === 1 : false,
+        hasOpenTestLop11: testLop11 ? testLop11.is_open === 1 : false
       },
       classes: config.CLASSES,
       centerName: config.CENTER_NAME,
@@ -235,94 +244,6 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// GET /api/student/classes-data
-router.get('/classes-data', async (req, res) => {
-  try {
-    const session = await getActiveSession();
-    if (!session) {
-      return res.status(404).json({ success: false, message: 'Chưa có buổi học nào.' });
-    }
-
-    const studentToken = req.cookies?.student_token || '';
-
-    // Fetch student lists for both classes
-    const lop10Res = await query(`
-      SELECT r.id, r.full_name, r.school_name, r.class_name, sa.status as attendance_status,
-             (r.student_token = $1) as is_me
-      FROM registrations r
-      LEFT JOIN student_attendance sa ON r.id = sa.registration_id
-      WHERE r.session_id = $2 AND r.class_name = 'Lớp 10'
-      ORDER BY r.id ASC
-    `, [studentToken, session.id]);
-
-    const lop11Res = await query(`
-      SELECT r.id, r.full_name, r.school_name, r.class_name, sa.status as attendance_status,
-             (r.student_token = $1) as is_me
-      FROM registrations r
-      LEFT JOIN student_attendance sa ON r.id = sa.registration_id
-      WHERE r.session_id = $2 AND r.class_name = 'Lớp 11'
-      ORDER BY r.id ASC
-    `, [studentToken, session.id]);
-
-    const lop10Students = lop10Res.rows;
-    const lop11Students = lop11Res.rows;
-
-    // Check if current student is registered
-    const myLop10 = lop10Students.find(s => s.is_me);
-    const myLop11 = lop11Students.find(s => s.is_me);
-
-    // Check test availability
-    const test10Res = await query('SELECT id, is_open FROM tests WHERE session_id = $1 AND class_name = $2', [session.id, 'Lớp 10']);
-    const test11Res = await query('SELECT id, is_open FROM tests WHERE session_id = $1 AND class_name = $2', [session.id, 'Lớp 11']);
-
-    const testLop10 = test10Res.rows[0];
-    const testLop11 = test11Res.rows[0];
-
-    res.json({
-      success: true,
-      session: {
-        id: session.id,
-        sessionDate: session.session_date,
-        formattedDate: formatDateToVN(session.session_date),
-        selfAttendanceLop10: session.self_attendance_lop10 === 1,
-        selfAttendanceLop11: session.self_attendance_lop11 === 1,
-        hasOpenTestLop10: testLop10 ? testLop10.is_open === 1 : false,
-        hasOpenTestLop11: testLop11 ? testLop11.is_open === 1 : false
-      },
-      classes: {
-        'Lớp 10': {
-          info: config.CLASSES['Lớp 10'],
-          count: lop10Students.length,
-          students: lop10Students.map((s, idx) => ({
-            stt: idx + 1,
-            id: s.id,
-            fullName: s.full_name,
-            schoolName: s.school_name || '—',
-            attendanceStatus: s.attendance_status || 'Chưa điểm danh',
-            isMe: !!s.is_me
-          })),
-          myRegistration: myLop10 ? { id: myLop10.id, fullName: myLop10.full_name, attendanceStatus: myLop10.attendance_status } : null
-        },
-        'Lớp 11': {
-          info: config.CLASSES['Lớp 11'],
-          count: lop11Students.length,
-          students: lop11Students.map((s, idx) => ({
-            stt: idx + 1,
-            id: s.id,
-            fullName: s.full_name,
-            schoolName: s.school_name || '—',
-            attendanceStatus: s.attendance_status || 'Chưa điểm danh',
-            isMe: !!s.is_me
-          })),
-          myRegistration: myLop11 ? { id: myLop11.id, fullName: myLop11.full_name, attendanceStatus: myLop11.attendance_status } : null
-        }
-      }
-    });
-  } catch (err) {
-    console.error('Lỗi classes-data:', err);
-    res.status(500).json({ success: false, message: 'Lỗi tải danh sách lớp.' });
-  }
-});
 
 // POST /api/student/self-attend
 router.post('/self-attend', async (req, res) => {
