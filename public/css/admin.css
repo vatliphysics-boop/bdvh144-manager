@@ -3,10 +3,10 @@
    ========================================================================== */
 
 .admin-header {
-  background: var(--primary-700);
-  color: #ffffff;
+  background: #ffffff;
+  color: var(--primary-800);
   padding: 0.75rem 1.5rem;
-  border-bottom: 1px solid var(--primary-800);
+  border-bottom: 1px solid var(--primary-200);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -31,8 +31,8 @@
 .admin-avatar {
   width: 40px;
   height: 40px;
-  background: #ffffff;
-  color: var(--primary-700);
+  background: var(--primary-100);
+  color: var(--primary-800);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -49,7 +49,7 @@
 
 .admin-titles p {
   font-size: 0.8rem;
-  color: #93c5fd;
+  color: var(--text-muted);
 }
 
 .admin-actions {

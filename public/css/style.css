@@ -64,10 +64,10 @@ body {
    HEADER
    ========================================================================== */
 .site-header {
-  background: var(--primary-700);
-  color: var(--text-white);
+  background: #ffffff;
+  color: var(--primary-800);
   padding: 0.75rem 1.5rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -91,10 +91,16 @@ body {
 }
 
 .brand-icon {
-  width: 36px;
-  height: 36px;
+  width: 260px;
+  height: auto;
   object-fit: contain;
   display: block;
+}
+
+@media (max-width: 600px) {
+  .brand-icon {
+    width: 190px;
+  }
 }
 
 .brand-info h1 {
@@ -106,7 +112,7 @@ body {
 
 .brand-info p {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-muted);
 }
 
 .header-actions {
@@ -117,8 +123,8 @@ body {
 
 .btn-header-admin {
   background: transparent;
-  color: var(--text-white);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: var(--primary-700);
+  border: 1px solid var(--primary-300);
   padding: 0.4rem 0.8rem;
   border-radius: var(--radius-sm);
   font-size: 0.85rem;
@@ -131,8 +137,8 @@ body {
 }
 
 .btn-header-admin:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #ffffff;
+  background: var(--bg-hover);
+  border-color: var(--primary-500);
 }
 
 /* ==========================================================================
@@ -942,25 +948,30 @@ body {
 
 .footer-logo {
   position: absolute;
-  bottom: 1.5rem;
+  bottom: 1rem;
   right: 1.5rem;
-  width: 36px;
-  height: 36px;
+  width: 260px;
+  height: auto;
   object-fit: contain;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 @media (min-width: 768px) {
-  .brand-icon, .footer-logo {
-    width: 48px;
-    height: 48px;
-  }
+  /* removed brand-icon and footer-logo width overrides here */
 }
 
 .site-footer a {
   color: var(--primary-600);
   text-decoration: none;
   font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .footer-logo {
+    width: 190px;
+    bottom: 0.75rem;
+    right: 1rem;
+  }
 }
 
 /* Responsive adjustments */
