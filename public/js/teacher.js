@@ -9,7 +9,8 @@ function showToast(message, type = 'info') {
 
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.innerHTML = `<span>${type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️'}</span> <div>${message}</div>`;
+  const iconHtml = type === 'error' ? '<svg class="icon-svg" style="color: #ef4444;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' : type === 'success' ? '<svg class="icon-svg" style="color: #10b981;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9 12l2 2 4-4"></path></svg>' : '<svg class="icon-svg" style="color: #3b82f6;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+  toast.innerHTML = `${iconHtml} <div>${message}</div>`;
   container.appendChild(toast);
 
   setTimeout(() => {
@@ -93,7 +94,7 @@ async function loadTeacherReport() {
           </td>
           <td>
             <span class="attendance-badge ${isCompleted ? 'present' : 'late'}">
-              ${isCompleted ? '✓ Đã kết thúc' : '⏳ Đang dạy'}
+              ${isCompleted ? '✓ Đã kết thúc' : '<span class="status-dot" style="color: #10b981;" aria-hidden="true"></span> Đang dạy'}
             </span>
           </td>
         </tr>

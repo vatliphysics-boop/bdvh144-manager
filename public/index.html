@@ -41,31 +41,31 @@
     <section class="schedule-banner" id="schedule-banner">
       <div class="banner-top">
         <div class="session-badge" id="session-date-display">
-          <span>📅</span> Buổi học: Đang tải...
+          <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Buổi học: Đang tải...
         </div>
         <div class="status-badge open" id="reg-status-badge">
-          <span>⏳</span> Đang kiểm tra...
+          <span class="status-dot" aria-hidden="true"></span> Đang kiểm tra...
         </div>
       </div>
 
       <div class="banner-classes-grid">
         <div class="class-time-card">
-          <div class="class-name"><span>📘</span> Lớp 10</div>
+          <div class="class-name"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Lớp 10</div>
           <div class="class-hours">07:30 – 09:30</div>
           <div class="class-meta">thứ Bảy hằng tuần</div>
         </div>
 
         <div class="class-time-card">
-          <div class="class-name"><span>📙</span> Lớp 11</div>
+          <div class="class-name"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Lớp 11</div>
           <div class="class-hours">17:30 – 19:00</div>
           <div class="class-meta">thứ Bảy hằng tuần</div>
         </div>
       </div>
 
       <div class="banner-teachers">
-        <span>👨‍🏫 <strong>Giáo viên:</strong> thầy Nguyễn Khoa</span>
-        <span>🧑‍💼 <strong>Trợ giảng:</strong> Võ Đoàn Đăng Khôi</span>
-        <span>📍 <strong>Múi giờ:</strong> Asia/Ho_Chi_Minh</span>
+        <span><strong>Giáo viên:</strong> thầy Nguyễn Khoa</span>
+        <span><strong>Trợ giảng:</strong> Võ Đoàn Đăng Khôi</span>
+        <span><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <strong>Múi giờ:</strong> Giờ Việt Nam (UTC+7)</span>
       </div>
     </section>
 
@@ -140,30 +140,30 @@
           <div class="form-group" style="margin-top: 1rem;">
             <div style="font-size: 0.9rem; font-weight: 600; color: #1F2937; margin-bottom: 0.25rem;">Địa điểm học</div>
             <a href="https://maps.app.goo.gl/RsTMMvJtbgwDP5fQ7" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--primary-600); text-decoration: none; font-size: 0.9rem; background: #F8FAFC; padding: 0.5rem 0.75rem; border: 1px solid #E2E8F0; border-radius: var(--radius-sm);">
-              📍 Mở bản đồ Google Maps
+              <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true" style="margin-right: 0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Mở bản đồ Google Maps
             </a>
           </div>
 
           <!-- Confirmation info before submitting -->
           <div class="info-notice-box" id="reg-pre-submit-info">
-            📌 Bạn đang đăng ký: <strong>Lớp 10</strong> &bull; Giờ học: <strong>07:30–09:30 thứ Bảy</strong>.
+            Bạn đang đăng ký: <strong>Lớp 10</strong> &bull; Giờ học: <strong>07:30–09:30 thứ Bảy</strong>.
           </div>
 
           <button type="submit" class="submit-btn" id="btn-submit-registration">
-            <span>🚀</span> Xác nhận ghi danh
+            Xác nhận ghi danh
           </button>
         </form>
       </div>
 
       <!-- Closed Notification (Shown when outside window or locked) -->
       <div class="form-card closed-state-card" id="reg-closed-container" style="display: none;">
-        <div class="closed-icon">🔒</div>
+        <div class="closed-icon"><svg class="icon-svg" style="width: 48px; height: 48px; margin: 0;" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></div>
         <h3 id="closed-title">Cổng ghi danh hiện đang đóng</h3>
         <p id="closed-desc">
           Cổng ghi danh tự động mở từ 00:00 thứ Năm đến 07:00 thứ Bảy hằng tuần.
         </p>
         <div class="info-notice-box" id="closed-next-open-box">
-          ⏰ Thời gian mở ghi danh tiếp theo: Đang cập nhật...
+          <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Thời gian mở ghi danh tiếp theo: Đang cập nhật...
         </div>
       </div>
     </section>

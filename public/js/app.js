@@ -27,7 +27,8 @@ function showToast(message, type = 'info') {
 
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.innerHTML = `<span>${type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️'}</span> <div>${message}</div>`;
+  const iconHtml = type === 'error' ? '<svg class="icon-svg" style="color: #ef4444;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' : type === 'success' ? '<svg class="icon-svg" style="color: #10b981;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9 12l2 2 4-4"></path></svg>' : '<svg class="icon-svg" style="color: #3b82f6;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+  toast.innerHTML = `${iconHtml} <div>${message}</div>`;
   container.appendChild(toast);
 
   setTimeout(() => {
@@ -67,7 +68,7 @@ async function loadCurrentSession() {
     // Update banner
     const dateDisplay = document.getElementById('session-date-display');
     if (dateDisplay) {
-      dateDisplay.innerHTML = `<span>📅</span> Buổi học: <strong>${data.session.formattedDate} (thứ Bảy)</strong>`;
+      dateDisplay.innerHTML = `<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Buổi học: <strong>${data.session.formattedDate} (thứ Bảy)</strong>`;
     }
 
     const badge = document.getElementById('reg-status-badge');
@@ -76,18 +77,18 @@ async function loadCurrentSession() {
 
     if (data.session.isOpen) {
       badge.className = 'status-badge open';
-      badge.innerHTML = '<span>🟢</span> Đang mở ghi danh';
+      badge.innerHTML = '<span class="status-dot" style="color: #10b981;" aria-hidden="true"></span> Đang mở ghi danh';
       if (formContainer) formContainer.style.display = 'block';
       if (closedContainer) closedContainer.style.display = 'none';
     } else {
       badge.className = 'status-badge closed';
-      badge.innerHTML = '<span>🔴</span> Cổng ghi danh đang đóng';
+      badge.innerHTML = '<span class="status-dot" style="color: #ef4444;" aria-hidden="true"></span> Cổng ghi danh đang đóng';
       if (formContainer) formContainer.style.display = 'none';
       if (closedContainer) {
         closedContainer.style.display = 'block';
         const nextBox = document.getElementById('closed-next-open-box');
         if (nextBox && data.session.nextOpenDisplay) {
-          nextBox.innerHTML = `⏰ Thời gian mở ghi danh tiếp theo: <strong>${data.session.nextOpenDisplay}</strong>`;
+          nextBox.innerHTML = `<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Thời gian mở ghi danh tiếp theo: <strong>${data.session.nextOpenDisplay}</strong>`;
         }
       }
     }
@@ -158,7 +159,7 @@ function updateSelectedClassDisplay() {
   if (infoBox && appState.classes && appState.classes[selected]) {
     const classInfo = appState.classes[selected];
     const dateFormatted = appState.session?.formattedDate || 'thứ Bảy';
-    infoBox.innerHTML = `📌 Bạn đang đăng ký: <strong>${selected}</strong> &bull; Ngày học: <strong>${dateFormatted}</strong> &bull; Giờ học: <strong>${classInfo.timeSlot}</strong>.`;
+    infoBox.innerHTML = `Bạn đang đăng ký: <strong>${selected}</strong> &bull; Ngày học: <strong>${dateFormatted}</strong> &bull; Giờ học: <strong>${classInfo.timeSlot}</strong>.`;
   }
 }
 
@@ -182,7 +183,7 @@ async function handleRegistrationSubmit(event) {
 
   // Prevent double click
   submitBtn.disabled = true;
-  submitBtn.innerHTML = `<span>⏳</span> Đang lưu ghi danh...`;
+  submitBtn.innerHTML = `Đang lưu ghi danh...`;
 
   try {
     const response = await fetch('/api/student/register', {
@@ -201,7 +202,7 @@ async function handleRegistrationSubmit(event) {
     if (!response.ok || !data.success) {
       showToast(data.message || 'Ghi danh không thành công. Vui lòng kiểm tra lại.', 'error');
       submitBtn.disabled = false;
-      submitBtn.innerHTML = `<span>🚀</span> Xác nhận ghi danh`;
+      submitBtn.innerHTML = `Xác nhận ghi danh`;
       return;
     }
 
@@ -243,7 +244,7 @@ async function handleRegistrationSubmit(event) {
     console.error('Lỗi gửi form:', err);
     showToast('Không thể kết nối đến máy chủ. Vui lòng thử lại.', 'error');
     submitBtn.disabled = false;
-    submitBtn.innerHTML = `<span>🚀</span> Xác nhận ghi danh`;
+    submitBtn.innerHTML = `Xác nhận ghi danh`;
   }
 }
 

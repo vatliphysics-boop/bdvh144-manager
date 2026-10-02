@@ -23,8 +23,8 @@
       </div>
 
       <div class="admin-actions">
-        <a href="/" class="btn-admin-link"><span>🌐</span> Xem trang học sinh</a>
-        <button class="btn-admin-link btn-admin-logout" onclick="handleLogout()"><span>🚪</span> Thoát phiên</button>
+        <a href="/" class="btn-admin-link"><svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg> Xem trang học sinh</a>
+        <button class="btn-admin-link btn-admin-logout" onclick="handleLogout()"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg> Thoát phiên</button>
       </div>
     </div>
   </header>
@@ -35,12 +35,12 @@
     <!-- Session Selector Bar -->
     <div class="session-bar">
       <div class="session-selector-group">
-        <label for="select-session-picker">📅 Chọn buổi học:</label>
+        <label for="select-session-picker"><svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Chọn buổi học:</label>
         <select id="select-session-picker" class="select-session" onchange="onSessionChange()">
           <!-- Populated dynamically -->
         </select>
         <button class="btn-outline" onclick="openNewSessionModal()" title="Tạo thêm buổi học">
-          <span>➕</span> Thêm buổi học
+          <svg class="icon-svg" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Thêm buổi học
         </button>
       </div>
 
@@ -53,14 +53,14 @@
     <section class="admin-section" id="section-lock-excel">
       <div class="section-header">
         <div class="section-title">
-          <span>📊</span> Chốt ghi danh & Xuất trang tính Excel
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M8 13h8"></path><path d="M8 17h8"></path><path d="M10 9h4"></path></svg> Chốt ghi danh & Xuất trang tính Excel
         </div>
         <div class="section-actions" id="excel-actions-container">
           <button class="btn-warning" id="btn-manual-lock" onclick="handleManualLock()">
-            <span>🔒</span> Chốt ghi danh & xuất trang tính
+            <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Chốt ghi danh & xuất trang tính
           </button>
           <button class="btn-success" id="btn-download-excel" onclick="handleDownloadExcel()">
-            <span>📥</span> Tải file Excel (.xlsx)
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Tải file Excel (.xlsx)
           </button>
         </div>
       </div>
@@ -80,7 +80,7 @@
     <section class="admin-section" id="section-timesheet">
       <div class="section-header">
         <div class="section-title">
-          <span>⏱️</span> Chấm công dạy của Võ Đoàn Đăng Khôi
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Chấm công dạy của Võ Đoàn Đăng Khôi
         </div>
         <div style="font-size: 0.85rem; color: #64748b;">
           Giờ chấm công lấy trực tiếp từ máy chủ (giờ Việt Nam), không nhận giờ do người dùng nhập.
@@ -90,14 +90,14 @@
       <div class="punch-card-wrapper">
         <!-- Lớp 10 Punch Card -->
         <div class="punch-class-card" id="punch-card-lop10">
-          <div class="punch-class-title">📘 Lớp 10</div>
+          <div class="punch-class-title"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Lớp 10</div>
           <div class="punch-class-sched">Lịch dạy: 07:30 – 09:30 thứ Bảy &bull; Phòng 1</div>
           <div class="punch-buttons">
             <button class="btn-primary" id="btn-in-lop10" onclick="handlePunchCheckIn('Lớp 10')">
-              <span>▶</span> Chấm công bắt đầu dạy
+              <svg class="icon-svg" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Chấm công bắt đầu dạy
             </button>
             <button class="btn-success" id="btn-out-lop10" onclick="handlePunchCheckOut('Lớp 10')">
-              <span>⏹</span> Kết thúc ca & lưu điểm danh
+              <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg> Kết thúc ca & lưu điểm danh
             </button>
           </div>
           <div class="punch-status-text" id="punch-status-lop10">
@@ -107,14 +107,14 @@
 
         <!-- Lớp 11 Punch Card -->
         <div class="punch-class-card" id="punch-card-lop11">
-          <div class="punch-class-title">📙 Lớp 11</div>
+          <div class="punch-class-title"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Lớp 11</div>
           <div class="punch-class-sched">Lịch dạy: 17:30 – 19:00 thứ Bảy &bull; Phòng 4</div>
           <div class="punch-buttons">
             <button class="btn-primary" id="btn-in-lop11" onclick="handlePunchCheckIn('Lớp 11')">
-              <span>▶</span> Chấm công bắt đầu dạy
+              <svg class="icon-svg" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg> Chấm công bắt đầu dạy
             </button>
             <button class="btn-success" id="btn-out-lop11" onclick="handlePunchCheckOut('Lớp 11')">
-              <span>⏹</span> Kết thúc ca & lưu điểm danh
+              <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect></svg> Kết thúc ca & lưu điểm danh
             </button>
           </div>
           <div class="punch-status-text" id="punch-status-lop11">
@@ -125,7 +125,7 @@
 
       <!-- History timesheet table -->
       <div style="margin-top: 1rem;">
-        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; color: #1e293b;">Lịch sử chấm công các buổi:</h4>
+        <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem; color: #1e293b;"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path></svg> Lịch sử chấm công các buổi:</h4>
         <div class="table-responsive">
           <table class="data-table">
             <thead>
@@ -154,7 +154,7 @@
     <section class="admin-section" id="section-teacher-attendance">
       <div class="section-header">
         <div class="section-title">
-          <span>👨‍🏫</span> Điểm danh Giáo viên & Trợ giảng
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg> Điểm danh Giáo viên & Trợ giảng
         </div>
         <div style="font-size: 0.85rem; color: #64748b;">
           Ghi nhận theo từng lớp trong buổi học đã chọn
@@ -183,10 +183,10 @@
     <section class="admin-section" id="section-student-attendance">
       <div class="section-header">
         <div class="section-title">
-          <span>👥</span> Điểm danh Học sinh theo danh sách
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> Điểm danh Học sinh theo danh sách
         </div>
         <div class="section-actions">
-          <button class="btn-outline" onclick="loadSessionDetails()"><span>🔄</span> Tải lại</button>
+          <button class="btn-outline" onclick="loadSessionDetails()"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg> Tải lại</button>
         </div>
       </div>
 
@@ -245,14 +245,14 @@
     <section class="admin-section" id="section-test-management">
       <div class="section-header">
         <div class="section-title">
-          <span>📝</span> Quản lý Test cuối giờ
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15l2 2 4-4"></path></svg> Quản lý Test cuối giờ
         </div>
         <div class="section-actions">
           <button class="btn-primary" onclick="openTestEditor('Lớp 10')">
-            <span>➕</span> Soạn đề Lớp 10
+            <svg class="icon-svg" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Soạn đề Lớp 10
           </button>
           <button class="btn-primary" onclick="openTestEditor('Lớp 11')">
-            <span>➕</span> Soạn đề Lớp 11
+            <svg class="icon-svg" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Soạn đề Lớp 11
           </button>
         </div>
       </div>
@@ -328,7 +328,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin: 1.5rem 0 0.75rem;">
           <h4 style="font-size: 1rem; font-weight: 800; color: #1e3a8a;">Danh sách câu hỏi:</h4>
           <button type="button" class="btn-outline" onclick="addQuestionCard()">
-            <span>➕</span> Thêm câu hỏi
+            <svg class="icon-svg" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Thêm câu hỏi
           </button>
         </div>
 

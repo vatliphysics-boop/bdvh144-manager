@@ -1025,3 +1025,27 @@ body {
 @keyframes drawCheck {
   to { stroke-dashoffset: 0; }
 }
+
+/* SVG Icon Utility */
+.icon-svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: text-bottom;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  background-color: currentColor;
+  margin-right: 6px;
+  vertical-align: middle;
+}

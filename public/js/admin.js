@@ -18,7 +18,8 @@ function showToast(message, type = 'info') {
 
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.innerHTML = `<span>${type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️'}</span> <div>${message}</div>`;
+  const iconHtml = type === 'error' ? '<svg class="icon-svg" style="color: #ef4444;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>' : type === 'success' ? '<svg class="icon-svg" style="color: #10b981;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9 12l2 2 4-4"></path></svg>' : '<svg class="icon-svg" style="color: #3b82f6;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>';
+  toast.innerHTML = `${iconHtml} <div>${message}</div>`;
   container.appendChild(toast);
 
   setTimeout(() => {
@@ -143,15 +144,15 @@ function renderLockExcelSection() {
   const btnLock = document.getElementById('btn-manual-lock');
 
   if (s.isManuallyLocked) {
-    lockTitle.innerHTML = `<span style="color: #dc2626;">🔒 Đã chốt ghi danh cho buổi học này</span>`;
+    lockTitle.innerHTML = `<span style="color: #dc2626;"><svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Đã chốt ghi danh cho buổi học này</span>`;
     lockDesc.textContent = 'Cổng ghi danh đã dừng nhận đăng ký mới.';
     btnLock.disabled = true;
     btnLock.textContent = '✓ Đã chốt ghi danh';
   } else {
-    lockTitle.innerHTML = `<span style="color: #059669;">🟢 Đang nhận ghi danh theo lịch tuần</span>`;
+    lockTitle.innerHTML = `<span style="color: #059669;"><span class="status-dot"></span> Đang nhận ghi danh theo lịch tuần</span>`;
     lockDesc.textContent = 'Cổng mở tự động từ 00:00 thứ Năm đến 07:00 thứ Bảy. Bấm nút bên dưới để chốt sớm.';
     btnLock.disabled = false;
-    btnLock.innerHTML = '<span>🔒</span> Chốt ghi danh & xuất trang tính';
+    btnLock.innerHTML = '<svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Chốt ghi danh & xuất trang tính';
   }
 
   if (s.hasExcel) {
@@ -228,7 +229,7 @@ function updatePunchCardUI(className, ts) {
     btnIn.disabled = true;
     btnOut.disabled = false;
     statusEl.innerHTML = `
-      <div style="color: var(--primary-700); font-weight: 700;">🟢 Đang dạy (${className})</div>
+      <div style="color: var(--primary-700); font-weight: 700;"><span class="status-dot" style="color: #10b981;"></span> Đang dạy (${className})</div>
       <div>Giờ vào: <strong>${ts.check_in_time}</strong> (Giờ máy chủ)</div>
     `;
     document.getElementById(`punch-card-${slug}`).style.display = 'block';
@@ -516,7 +517,7 @@ function renderTestManagementSection() {
           <h4 style="font-size: 1.05rem; font-weight: 800; color: #1e3a8a;">${className}</h4>
           <p style="font-size: 0.88rem; color: #64748b; margin: 0.5rem 0 1rem;">Chưa soạn đề test cho lớp này.</p>
           <button class="btn-primary" onclick="openTestEditor('${className}')">
-            <span>➕</span> Soạn đề test
+            <svg class="icon-svg" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Soạn đề test
           </button>
         </div>
       `;
@@ -534,10 +535,10 @@ function renderTestManagementSection() {
         </p>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
           <button class="${isOpen ? 'btn-warning' : 'btn-success'}" onclick="toggleTestStatus(${test.id}, ${!isOpen})">
-            ${isOpen ? '🔒 Đóng bài test' : '🟢 Mở bài test'}
+            ${isOpen ? '<svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Đóng bài test' : '<span class="status-dot" style="color: #10b981;"></span> Mở bài test'}
           </button>
           <button class="btn-outline" onclick="openTestEditor('${className}', ${test.id})">
-            ✏️ Sửa đề
+            <svg class="icon-svg" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Sửa đề
           </button>
         </div>
       </div>
