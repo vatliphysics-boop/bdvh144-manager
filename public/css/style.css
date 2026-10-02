@@ -85,34 +85,85 @@ body {
 .brand-wrapper {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1.25rem;
   text-decoration: none;
   color: inherit;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.brand-logo-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .brand-icon {
-  width: 260px;
-  height: auto;
-  object-fit: contain;
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  object-position: left center;
   display: block;
 }
 
-@media (max-width: 600px) {
-  .brand-icon {
-    width: 190px;
-  }
+.brand-name-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary-800);
+  line-height: 1.1;
+}
+
+.brand-sub {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1.5px solid var(--border-light);
+  padding-left: 1.25rem;
 }
 
 .brand-info h1 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-800);
+  line-height: 1.1;
 }
 
 .brand-info p {
-  font-size: 0.8rem;
+  font-size: 14px;
+  font-weight: 400;
   color: var(--text-muted);
+  margin-top: 6px;
+}
+
+@media (max-width: 600px) {
+  .brand-wrapper {
+    gap: 0.75rem;
+  }
+  .brand-logo-group {
+    gap: 0.35rem;
+  }
+  .brand-icon {
+    width: 40px;
+    height: 40px;
+  }
+  .brand-name { font-size: 16px; }
+  .brand-sub { font-size: 8px; }
+  .brand-info { padding-left: 0.75rem; }
+  .brand-info h1 { font-size: 17px; }
+  .brand-info p { font-size: 11px; margin-top: 4px; }
 }
 
 .header-actions {
@@ -122,6 +173,7 @@ body {
 }
 
 .btn-header-admin {
+  font-family: Arial, Helvetica, sans-serif;
   background: transparent;
   color: var(--primary-700);
   border: 1px solid var(--primary-300);
