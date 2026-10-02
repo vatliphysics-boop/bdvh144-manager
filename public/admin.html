@@ -13,7 +13,8 @@
   <!-- Admin Header -->
   <header class="admin-header">
     <div class="admin-header-container">
-      <div class="admin-user-info">
+      <div class="admin-user-info" style="display: flex; align-items: center;">
+        <img src="/assets/hoi-vat-ly-viet-nam.png" alt="Logo Hội Vật lý Việt Nam" class="brand-icon" style="margin-right: 0.75rem;">
         <div class="admin-avatar">K</div>
         <div class="admin-titles">
           <h2>Võ Đoàn Đăng Khôi</h2>
@@ -92,11 +93,11 @@
           <div class="punch-class-title">📘 Lớp 10</div>
           <div class="punch-class-sched">Lịch dạy: 07:30 – 09:30 thứ Bảy</div>
           <div class="punch-buttons">
-            <button class="punch-btn-in" id="btn-in-lop10" onclick="handlePunchCheckIn('Lớp 10')">
-              <span>▶</span> Chấm công vào
+            <button class="btn-primary" id="btn-in-lop10" onclick="handlePunchCheckIn('Lớp 10')">
+              <span>▶</span> Chấm công bắt đầu dạy
             </button>
-            <button class="punch-btn-out" id="btn-out-lop10" onclick="handlePunchCheckOut('Lớp 10')">
-              <span>⏹</span> Chấm công ra
+            <button class="btn-success" id="btn-out-lop10" onclick="handlePunchCheckOut('Lớp 10')">
+              <span>⏹</span> Kết thúc ca & lưu điểm danh
             </button>
           </div>
           <div class="punch-status-text" id="punch-status-lop10">
@@ -109,11 +110,11 @@
           <div class="punch-class-title">📙 Lớp 11</div>
           <div class="punch-class-sched">Lịch dạy: 17:30 – 19:00 thứ Bảy</div>
           <div class="punch-buttons">
-            <button class="punch-btn-in" id="btn-in-lop11" onclick="handlePunchCheckIn('Lớp 11')">
-              <span>▶</span> Chấm công vào
+            <button class="btn-primary" id="btn-in-lop11" onclick="handlePunchCheckIn('Lớp 11')">
+              <span>▶</span> Chấm công bắt đầu dạy
             </button>
-            <button class="punch-btn-out" id="btn-out-lop11" onclick="handlePunchCheckOut('Lớp 11')">
-              <span>⏹</span> Chấm công ra
+            <button class="btn-success" id="btn-out-lop11" onclick="handlePunchCheckOut('Lớp 11')">
+              <span>⏹</span> Kết thúc ca & lưu điểm danh
             </button>
           </div>
           <div class="punch-status-text" id="punch-status-lop11">
@@ -134,13 +135,14 @@
                 <th>Giờ lịch</th>
                 <th>Giờ vào thực tế</th>
                 <th>Giờ ra thực tế</th>
-                <th>Tổng thời gian thực tế</th>
+                <th>Tổng thời lượng</th>
                 <th>Trạng thái</th>
+                <th>Thao tác</th>
               </tr>
             </thead>
             <tbody id="timesheet-history-tbody">
               <tr>
-                <td colspan="7" class="empty-state">Đang tải lịch sử chấm công...</td>
+                <td colspan="8" class="empty-state">Đang tải lịch sử chấm công...</td>
               </tr>
             </tbody>
           </table>
@@ -343,6 +345,40 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer" style="position: relative; overflow: hidden; padding-right: 60px;">
+    <p><strong>Trung tâm BDVH 144</strong> &bull; Báo cáo quản trị &bull; Hệ thống quản lý học sinh và lớp học</p>
+    <img src="/assets/hoi-vat-ly-viet-nam.png" alt="Logo Hội Vật lý Việt Nam" class="footer-logo">
+  </footer>
+
+  <!-- HISTORY DETAILS MODAL -->
+  <div class="modal-overlay" id="history-details-modal">
+    <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+      <button class="modal-close-btn" onclick="closeHistoryDetailsModal()">&times;</button>
+      <div class="modal-header">
+        <h3 id="history-modal-title">Chi tiết điểm danh</h3>
+        <p id="history-modal-subtitle">Đang tải...</p>
+      </div>
+      <div id="history-modal-body" style="margin-top: 1.25rem;">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">STT</th>
+                <th>Họ và tên</th>
+                <th>Trường</th>
+                <th>Trạng thái điểm danh</th>
+              </tr>
+            </thead>
+            <tbody id="history-modal-tbody">
+              <tr><td colspan="4" class="empty-state">Đang tải dữ liệu...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 

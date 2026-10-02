@@ -93,13 +93,8 @@ body {
 .brand-icon {
   width: 36px;
   height: 36px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
+  object-fit: contain;
+  display: block;
 }
 
 .brand-info h1 {
@@ -942,6 +937,24 @@ body {
   text-align: center;
   font-size: 0.85rem;
   color: var(--text-secondary);
+  position: relative;
+}
+
+.footer-logo {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  opacity: 0.8;
+}
+
+@media (min-width: 768px) {
+  .brand-icon, .footer-logo {
+    width: 48px;
+    height: 48px;
+  }
 }
 
 .site-footer a {

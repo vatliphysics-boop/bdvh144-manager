@@ -223,21 +223,18 @@ function updatePunchCardUI(className, ts) {
     btnIn.disabled = false;
     btnOut.disabled = true;
     statusEl.innerHTML = `Trạng thái: <strong>Chưa chấm công hôm nay</strong>`;
+    document.getElementById(`punch-card-${slug}`).style.display = 'block';
   } else if (ts.status === 'Đang dạy') {
     btnIn.disabled = true;
     btnOut.disabled = false;
     statusEl.innerHTML = `
-      <div style="color: #2563eb; font-weight: 700;">🟢 Đang dạy (${className})</div>
+      <div style="color: var(--primary-700); font-weight: 700;">🟢 Đang dạy (${className})</div>
       <div>Giờ vào: <strong>${ts.check_in_time}</strong> (Giờ máy chủ)</div>
     `;
+    document.getElementById(`punch-card-${slug}`).style.display = 'block';
   } else if (ts.status === 'Đã kết thúc') {
-    btnIn.disabled = true;
-    btnOut.disabled = true;
-    statusEl.innerHTML = `
-      <div style="color: #059669; font-weight: 700;">✓ Đã hoàn thành buổi dạy</div>
-      <div>Vào: <strong>${ts.check_in_time}</strong> &bull; Ra: <strong>${ts.check_out_time}</strong></div>
-      <div>Tổng thời gian: <strong>${ts.duration_formatted}</strong></div>
-    `;
+    // Hide the punch card when session is finished
+    document.getElementById(`punch-card-${slug}`).style.display = 'none';
   }
 }
 
@@ -323,6 +320,11 @@ async function loadTimesheetHistory() {
           <td><strong>${isDone ? (t.duration_formatted || '0 phút') : 'Đang tính...'}</strong></td>
           <td>
             <span class="attendance-badge ${isDone ? 'present' : 'late'}">${t.status}</span>
+          </td>
+          <td>
+            <button class="btn-outline" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="viewHistoryDetails(${t.session_id}, '${t.class_name}')">
+              Xem danh sách
+            </button>
           </td>
         </tr>
       `;
@@ -846,4 +848,46 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+// History Details Modal
+async function viewHistoryDetails(sessionId, className) {
+  try {
+    const res = await fetch(`/api/admin/sessions/${sessionId}`);
+    const data = await res.json();
+    
+    if (!data.success) {
+      showToast('Không thể tải chi tiết ca dạy.', 'error');
+      return;
+    }
+    
+    const students = data.session.students.filter(s => s.class_name === className);
+    document.getElementById('history-modal-title').textContent = `Chi tiết ca: ${className}`;
+    document.getElementById('history-modal-subtitle').textContent = `Ngày: ${data.session.formattedDate} | Sĩ số: ${students.length}`;
+    
+    const tbody = document.getElementById('history-modal-tbody');
+    if (students.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" class="empty-state">Không có dữ liệu học sinh.</td></tr>';
+    } else {
+      tbody.innerHTML = students.map((s, idx) => `
+        <tr>
+          <td style="text-align: center;">${idx + 1}</td>
+          <td><strong>${escapeHtml(s.full_name)}</strong></td>
+          <td>${escapeHtml(s.school_name || '—')}</td>
+          <td>
+            <span class="attendance-badge ${s.status.includes('Có mặt') ? 'present' : s.status === 'Vắng mặt' ? 'absent' : s.status === 'Đi trễ' ? 'late' : 'default'}">${s.status}</span>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    document.getElementById('history-details-modal').classList.add('open');
+  } catch (err) {
+    console.error(err);
+    showToast('Lỗi khi mở lịch sử', 'error');
+  }
+}
+
+function closeHistoryDetailsModal() {
+  document.getElementById('history-details-modal').classList.remove('open');
 }

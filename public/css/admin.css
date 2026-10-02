@@ -3,10 +3,10 @@
    ========================================================================== */
 
 .admin-header {
-  background: linear-gradient(135deg, #091e42 0%, #172b4d 100%);
+  background: var(--primary-700);
   color: #ffffff;
-  padding: 1rem 1.5rem;
-  border-bottom: 2px solid #2563eb;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--primary-800);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -29,17 +29,16 @@
 }
 
 .admin-avatar {
-  width: 42px;
-  height: 42px;
-  background: #2563eb;
-  color: #ffffff;
+  width: 40px;
+  height: 40px;
+  background: #ffffff;
+  color: var(--primary-700);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1.1rem;
-  box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
 }
 
 .admin-titles h2 {
@@ -60,11 +59,11 @@
 }
 
 .btn-admin-link {
-  background: rgba(255, 255, 255, 0.12);
+  background: transparent;
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   padding: 0.45rem 0.9rem;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
@@ -163,9 +162,9 @@
 }
 
 .section-title {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #0f172a;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -180,7 +179,7 @@
 
 /* Primary buttons */
 .btn-primary {
-  background: #2563eb;
+  background: var(--primary-700);
   color: #ffffff;
   border: none;
   padding: 0.6rem 1.15rem;
@@ -196,8 +195,7 @@
 }
 
 .btn-primary:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
+  background: var(--primary-800);
 }
 
 .btn-success {
