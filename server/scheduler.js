@@ -35,6 +35,22 @@ async function checkScheduleCycle(retryCount = 0) {
       }
     }
 
+    // 1b. Catch-up & retry for locked sessions that miss an Excel snapshot
+    const missingExcelSessions = await query(`
+      SELECT * FROM sessions
+      WHERE is_manually_locked = 1 AND (excel_generated_at IS NULL OR excel_generated_at = '')
+    `);
+
+    for (const session of missingExcelSessions.rows) {
+      try {
+        console.log(`[Scheduler Catch-up] Đang bù snapshot Excel cho buổi đã khóa: ${session.session_date}`);
+        await generateSessionExcelBuffer(session.id);
+        console.log(`[Scheduler Catch-up] Đã tạo thành công snapshot Excel bù cho buổi ${session.session_date}`);
+      } catch (excelErr) {
+        console.error(`[Scheduler Error] Thử lại snapshot Excel thất bại cho buổi ${session.session_date}:`, excelErr.message);
+      }
+    }
+
     // 2. Ensure next Saturday session is provisioned
     const latestRes = await query(`
       SELECT * FROM sessions ORDER BY session_date DESC LIMIT 1

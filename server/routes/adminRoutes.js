@@ -174,8 +174,8 @@ router.post('/sessions/:id/lock', async (req, res) => {
   }
 });
 
-// GET /api/admin/sessions/:id/download-excel - Stream generated Excel directly from database snapshot
-router.get('/sessions/:id/download-excel', async (req, res) => {
+// GET /api/admin/sessions/:id/download-excel (and alias /excel) - Stream generated Excel directly from database snapshot
+router.get(['/sessions/:id/download-excel', '/sessions/:id/excel'], async (req, res) => {
   try {
     const sessionId = parseInt(req.params.id, 10);
     const sessionRes = await query('SELECT * FROM sessions WHERE id = $1', [sessionId]);
